@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema.createTable('categories', function (table) {
+  return knex.schema.createTable('fsys_categories', function (table) {
     table.increments();
     table.string('category').notNullable();
     table.string('applicable').notNullable();
@@ -11,5 +11,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('categories');
+  return knex.schema.dropTable('fsys_categories');
 };
