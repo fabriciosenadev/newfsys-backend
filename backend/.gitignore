@@ -105,3 +105,6 @@ dist
 
 # Non usable package files
 package-lock.json
+
+# SQLite files
+src/database/db.sqlite
