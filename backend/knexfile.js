@@ -11,6 +11,9 @@ module.exports = {
       directory: './src/database/migrations'
     },
     useNullAsDefault: true,
+    seeds:{
+      directory:'./src/database/seeds'
+    },
   },
 
   staging: {
