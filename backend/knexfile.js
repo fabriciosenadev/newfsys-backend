@@ -7,7 +7,7 @@ module.exports = {
     connection: {
       filename: './src/database/db.sqlite'
     },
-    migration: {
+    migrations: {
       directory: './src/database/migrations'
     },
     useNullAsDefault: true,
