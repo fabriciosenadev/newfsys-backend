@@ -3,8 +3,7 @@ exports.up = function(knex) {
   return knex.schema.createTable('fsys_categories', function (table) {
     table.increments();
     table.string('category').notNullable();
-    table.string('applicable').notNullable();
-
+    table.enum('applicable',['in','out']).notNullable();
     table.timestamps();
     table.timestamp('deleted_at');
   });
