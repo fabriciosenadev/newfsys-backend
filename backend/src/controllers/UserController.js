@@ -37,4 +37,9 @@ module.exports = {
         const body = request.body;
         response.json(body);
     },
+    async info (request, response)
+    {
+        const body = request.body;
+        response.json(body);
+    },
 };
