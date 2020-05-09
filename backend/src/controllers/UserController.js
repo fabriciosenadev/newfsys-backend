@@ -2,7 +2,7 @@ const connection = require('../database/connection');
 
 module.exports = {
 
-    async store (request, response) 
+    async register (request, response) 
     {
         try
         {
