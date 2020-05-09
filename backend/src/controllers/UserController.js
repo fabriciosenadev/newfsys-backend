@@ -2,6 +2,13 @@ const connection = require('../database/connection');
 
 module.exports = {
 
+    /**
+     * function to register new users
+     * @param { full_name: string } request.body 
+     * @param { email: string } request.body 
+     * @param { password: string } request.body 
+     * @param {*} response.json
+     */
     async register (request, response) 
     {
         try
@@ -24,6 +31,12 @@ module.exports = {
         }
     },
 
+    /**
+     * function to LogIn the system
+     * @param { email: string } request.body
+     * @param { password: string } request.body
+     * @param {*} response.json
+     */
     async login (request, response)
     {
         try
@@ -50,6 +63,11 @@ module.exports = {
         }
     },
 
+    /**
+     * function to reset password: verifying email - part 1
+     * @param { email: string } request.body
+     * @param {*} response.json
+     */
     async forgot (request, response)
     {
         try
@@ -73,6 +91,12 @@ module.exports = {
         }
     },
 
+    /**
+     * function to reset password: reseting password - part 2
+     * @param { id: int } request 
+     * @param { password: string } request 
+     * @param {*} response 
+     */
     async resetPassword (request, response)
     {
         try
@@ -93,6 +117,11 @@ module.exports = {
         }
     },
 
+    /**
+     * function to bring user's informations
+     * @param { id: int } request 
+     * @param {*} response.json
+     */
     async info (request, response)
     {
         try
