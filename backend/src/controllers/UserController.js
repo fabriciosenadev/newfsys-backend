@@ -23,11 +23,11 @@ module.exports = {
                     created_at: new Date().toISOString()
                 });
             
-            return response.json({ success:"data was saved with successfully" });
+            return response.status(200).json({ success:"data was saved with successfully" });
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(400).json(error);
         }
     },
 
@@ -43,23 +43,23 @@ module.exports = {
         {
             const { email, password } = request.body;
             
-            const userId = await connection('fsys_users')
+            const userData = await connection('fsys_users')
                 .where({
                     email,
                     password
                 }).select('id','full_name');
             
             // verifica se o usuário foi encontrado
-            if (userId.length < 1) 
+            if  (userData.length < 1) 
                 return response.status(400).json({ 
                     error: "user or password was not match" 
                 });
             
-            return response.json(userId);
+            return response.satus(200).json(userData);
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(400).json(error);
         }
     },
 
@@ -83,11 +83,11 @@ module.exports = {
                     error: "user was not match" 
                 });
             
-            return response.json(userId);
+            return response.status(200).json(userId);
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(400).json(error);
         }
     },
 
@@ -109,11 +109,11 @@ module.exports = {
                 updated_at: new Date().toISOString()
             })
             
-            return response.json({ success:"data was saved with successfully" });
+            return response.status(200).json({ success:"data was saved with successfully" });
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(400).json(error);
         }
     },
 
@@ -130,11 +130,11 @@ module.exports = {
             const info = await connection('fsys_users')
             .where({ id }).select('*');
             
-            return response.json(info);
+            return response.status(200).json(info);
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(400).json(error);
         }
     },
 };
