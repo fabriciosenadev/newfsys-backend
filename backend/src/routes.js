@@ -1,8 +1,12 @@
 const express = require('express');
 
+// Controlers
 const UserController = require('./controllers/UserController');
-const LaunchController = require('../src/controllers/LaunchController');
-const ProfileController = require('../src/controllers/ProfileController');
+const LaunchController = require('./controllers/LaunchController');
+const ProfileController = require('./controllers/ProfileController');
+
+// Middlewares
+const UserMiddleware = require('./middlewares/UserMiddleware');
 
 const routes = express.Router();
 
@@ -11,8 +15,15 @@ routes.get('/api', (request, response) => {
     response.send('API is working');
 });
 
+//#region user's routes
+
 // Rotas do usuário
-routes.post('/user/register', UserController.register);
+routes
+    .post(
+        '/user/register', 
+        UserMiddleware.register,
+        UserController.register,
+    );
 
 // controle de senha
 routes.post('/user/forgot', UserController.forgot);
@@ -21,6 +32,8 @@ routes.put('/user/reset_password', UserController.resetPassword);
 routes.post('/user/info/', UserController.info);
 
 routes.post('/user/login', UserController.login);
+
+//#endregion
 
 // Rotas de fluxo
 routes.get('/launching', ProfileController.index);
