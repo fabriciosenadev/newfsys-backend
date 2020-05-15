@@ -27,7 +27,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.status(400).json(error);
+            return response.status(500).json(error);
         }
     },
 
@@ -51,7 +51,8 @@ module.exports = {
             
             // verifica se o usuário foi encontrado
             if  (userData.length < 1) 
-                return response.status(400).json({ 
+                // 507 to insuficient storage
+                return response.status(507).json({ 
                     error: "user or password was not match" 
                 });
             
@@ -59,7 +60,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.status(400).json(error);
+            return response.status(500).json(error);
         }
     },
 
@@ -79,7 +80,8 @@ module.exports = {
             
             // verifica se o usuário foi encontrado
             if (userId.length < 1) 
-                return response.status(400).json({ 
+                // 507 to insuficient storage
+                return response.status(507).json({ 
                     error: "user was not match" 
                 });
             
@@ -87,7 +89,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.status(400).json(error);
+            return response.status(500).json(error);
         }
     },
 
@@ -113,7 +115,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.status(400).json(error);
+            return response.status(500).json(error);
         }
     },
 
@@ -134,7 +136,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.status(400).json(error);
+            return response.status(500).json(error);
         }
     },
 };
