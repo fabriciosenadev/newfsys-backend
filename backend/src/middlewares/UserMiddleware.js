@@ -3,7 +3,7 @@ const { check, oneOf, validationResult } = require('express-validator');
 const connection = require('../database/connection');
 
 module.exports = {
-    async register (request, response, next)
+    async validateToStore (request, response, next)
     {
         // validate if data was sent is real true
         await check('full_name')

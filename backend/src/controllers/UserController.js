@@ -9,7 +9,7 @@ module.exports = {
      * @param { password: string } request.body 
      * @param {*} response.json
      */
-    async register (request, response) 
+    async store (request, response) 
     {
         try
         {

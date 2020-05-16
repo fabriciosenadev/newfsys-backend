@@ -27,8 +27,8 @@ routes.get('/api', (request, response) => {
 routes
     .post(
         '/user/register', 
-        UserMiddleware.register,
-        UserController.register,
+        UserMiddleware.validateToStore,
+        UserController.store,
     );
 
 // controle de senha
