@@ -26,7 +26,7 @@ module.exports = {
                     password
                 })
                 .select('id')
-                // .first();
+                .first();
 
             // verifica se o usuário foi encontrado
             if  (userData.length < 1)
