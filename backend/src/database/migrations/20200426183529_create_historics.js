@@ -7,8 +7,7 @@ exports.up = function(knex) {
         table.string('description').notNullable();
         table.decimal('value').notNullable();
 
-        table.integer('id_category').notNullable();
-        table.integer('id_pay_method').notNullable();        
+        table.integer('id_category').notNullable();       
         
         table.integer('created_by').notNullable();
         table.timestamps();
@@ -16,7 +15,6 @@ exports.up = function(knex) {
         
         table.foreign('created_by').references('fsys_users.id');
         table.foreign('id_category').references('fsys_categories.id');
-        table.foreign('id_pay_method').references('fsys_pay_methods.id');
     });
 };
 
