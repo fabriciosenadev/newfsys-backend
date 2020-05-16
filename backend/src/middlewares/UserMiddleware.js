@@ -1,11 +1,11 @@
-const express = require('express');
-// const util = require('util');
-// const { validator } = require('express-validator');
+// const express = require('express');
 const { check, oneOf, validationResult } = require('express-validator');
+const connection = require('../database/connection');
 
 module.exports = {
     async register (request, response, next)
     {
+        // validate if data was sent is real true
         await check('full_name')
                 .exists()
                 .withMessage('full_name is required')
@@ -32,6 +32,17 @@ module.exports = {
           return response.status(422).json({ errors: result.array() });
         }
       
+        // validate if email exists
+        const { email } = request.body;
+        const dataExisting = await connection('fsys_users')
+                .where({ email })
+                .select('id');
+
+        if(dataExisting.length > 0)
+        {
+          return response.status(507).json({ error: "email was used already" });
+        }      
+
         // user can be created now!
         next();
     }
