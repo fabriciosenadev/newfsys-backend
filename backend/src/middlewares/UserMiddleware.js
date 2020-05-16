@@ -24,7 +24,7 @@ module.exports = {
                 .exists()
                 .withMessage('password is required')
                 .isLength({ min: 8 })
-                .withMessage('min length is 10 characters')
+                .withMessage('min length is 8 characters')
                 .run(request);
       
         const result = validationResult(request);
