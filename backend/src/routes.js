@@ -1,6 +1,12 @@
 const express = require('express');
 
+const jwt = require('jsonwebtoken');
+const _ = require('dotenv-safe').config({
+    allowEmptyValues: true
+});
+
 // Controlers
+const SessionController = require('./controllers/SessionController');
 const UserController = require('./controllers/UserController');
 const LaunchController = require('./controllers/LaunchController');
 const ProfileController = require('./controllers/ProfileController');
@@ -31,7 +37,7 @@ routes.put('/user/reset_password', UserController.resetPassword);
 
 routes.post('/user/info/', UserController.info);
 
-routes.post('/user/login', UserController.login);
+routes.post('/user/login', SessionController.create);
 
 //#endregion
 
