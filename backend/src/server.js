@@ -4,7 +4,8 @@ const cors = require('cors');
 
 // obtain data from .env file
 require('dotenv-safe').config({
-    allowEmptyValues: true
+    allowEmptyValues: true,
+    path: '.env'
 });
 
 // route files
