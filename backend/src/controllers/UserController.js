@@ -32,39 +32,6 @@ module.exports = {
     },
 
     /**
-     * function to LogIn the system
-     * @param { email: string } request.body
-     * @param { password: string } request.body
-     * @param {*} response.json
-     */
-    async login (request, response)
-    {
-        try
-        {
-            const { email, password } = request.body;
-            
-            const userData = await connection('fsys_users')
-                .where({
-                    email,
-                    password
-                }).select('id','full_name');
-            
-            // verifica se o usuário foi encontrado
-            if  (userData.length < 1) 
-                // 507 to insuficient storage
-                return response.status(507).json({ 
-                    error: "user or password was not match" 
-                });
-            
-            return response.satus(200).json(userData);
-        }
-        catch (error)
-        {
-            return response.status(500).json(error);
-        }
-    },
-
-    /**
      * function to reset password: verifying email - part 1
      * @param { email: string } request.body
      * @param {*} response.json
