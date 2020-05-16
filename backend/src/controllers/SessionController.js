@@ -39,6 +39,7 @@ module.exports = {
             } 
 
             auth = true;
+            const { id } = userData;
             const token = jwt.sign({ id }, process.env.SECRET, {
                 expiresIn: 600 // expires in 10 min
             })
@@ -61,8 +62,8 @@ module.exports = {
         try
         {
             let auth = false;
-            let token = null;
-            return response.status(200).json({ auth, token });
+            const token = false;
+            return response.status(200).json({auth, token});
         }
         catch (error)
         {
