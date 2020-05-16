@@ -12,6 +12,7 @@ const LaunchController = require('./controllers/LaunchController');
 const ProfileController = require('./controllers/ProfileController');
 
 // Middlewares
+const SessionMiddleware = require('./middlewares/SessionMiddleware');
 const UserMiddleware = require('./middlewares/UserMiddleware');
 
 const routes = express.Router();
@@ -42,7 +43,11 @@ routes.post('/user/login', SessionController.create);
 //#endregion
 
 // Rotas de fluxo
-routes.get('/launching', ProfileController.index);
+routes.get(
+        '/launching', 
+        SessionMiddleware.byPass,
+        ProfileController.index
+    );
 
 // Rotas de fluxo de entrada
 routes.post('/launch/in', (request, response) => {
