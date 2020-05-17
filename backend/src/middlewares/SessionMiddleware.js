@@ -36,7 +36,7 @@ module.exports = {
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(500).json(error);
         }
     },
 };
