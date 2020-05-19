@@ -55,7 +55,7 @@ routes.get(
 
 // Rotas de fluxo de entrada
 routes.post(
-    '/launch/in', 
+    '/launch', 
     SessionMiddleware.byPass, 
     // TODO: Adicionar validação dos campos a serem salvos
     LaunchController.store
