@@ -38,7 +38,11 @@ routes.put('/user/reset_password', UserController.resetPassword);
 
 routes.post('/user/info/', UserController.info);
 
-routes.post('/user/login', SessionController.create);
+routes.post(
+    '/user/login', 
+    // TODO: Adicionar validador de de dados enviados
+    SessionController.create
+    );
 
 //#endregion
 
@@ -50,9 +54,12 @@ routes.get(
     );
 
 // Rotas de fluxo de entrada
-routes.post('/launch/in', (request, response) => {
-    response.send('API is working');
-});
+routes.post(
+    '/launch/in', 
+    SessionMiddleware.byPass, 
+    // TODO: Adicionar validação dos campos a serem salvos
+    LaunchController.store
+    );
 routes.get('/launch/in/:id', (request, response) => {
     response.send('API is working');
 });
