@@ -7,16 +7,20 @@ module.exports = {
         {
             const { userId } = request.body;
 
-            const launching = await connection('fsys_historics')
-                                        .where('created_by', userId)
-                                        .orderBy('date', 'asc')
-                                        .select('*')
+            const launching = await connection('fsys_historics AS h')
+                                .select('h.id','h.date','h.description','h.value', 'c.category','pm.pay_method')
+                                .join('fsys_categories AS c','h.id_category','c.id')
+                                .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
+                                .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
+                                .where('h.created_by', '=', userId)
+                                .orderBy('h.date', 'desc')
+                                .whereNull('h.deleted_at');
 
-            return response.json({ launching });
+            return response.status(200).json({ launching });
         }
         catch (error)
         {
-            return response.json(error);
+            return response.status(500).json(error);
         }
     },
 };
