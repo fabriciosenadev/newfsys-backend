@@ -60,9 +60,12 @@ routes.post(
     // TODO: Adicionar validação dos campos a serem salvos
     LaunchController.store
     );
-routes.get('/launch/in/:id', (request, response) => {
-    response.send('API is working');
-});
+routes.get(
+    '/launch/:id', 
+    SessionMiddleware.byPass,
+    // TODO: Adicionar validação dos campos a serem salvos
+    LaunchController.show
+    );
 routes.put('/launch/in/:id', (request, response) => {
     response.send('API is working');
 });
