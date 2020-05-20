@@ -30,7 +30,8 @@ module.exports = {
                     .insert({
                         id_pay_method: idPayMethod,
                         id_historic: idHistoric[0],
-                        created_by: userId                        
+                        created_by: userId,
+                        created_at: new Date().toISOString()                        
                     });
             }
             
