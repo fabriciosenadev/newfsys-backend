@@ -72,9 +72,11 @@ routes.put(
     // TODO: Adicionar validação dos campos a serem salvos
     LaunchController.update
     );
-routes.delete('/launch/in/:id', (request, response) => {
-    response.send('API is working');
-});
+routes.delete(
+    '/launch/:id', 
+    SessionMiddleware.byPass,
+    LaunchController.destroy
+    );
 
 // Rotas de fluxo de saída
 routes.post('/launch/out', (request, response) => {
