@@ -69,4 +69,39 @@ module.exports = {
             return response.status(500).json({ error });
         }
     },
+
+    async update(request, response)
+    {
+        try
+        {
+            const { id } = request.params;
+            const { date, description, value, idCategory, userId, idPayMethod } = request.body;
+
+            await connection('fsys_historics')
+                .where({ id })
+                .update({ 
+                    date,
+                    description,
+                    value,
+                    id_category: idCategory,
+                    updated_at: new Date().toISOString()
+                });
+
+            if (idPayMethod)
+            {
+                await connection('fsys_pay_method_historics')
+                .where({ id_historic: id })
+                .update({
+                    id_pay_method: idPayMethod,
+                    updated_at: new Date().toISOString()                     
+                });
+            }
+
+            return response.status(200).json({ success: "method is working" });
+        }
+        catch (error)
+        {
+            return response.status(500).json({ error });
+        }
+    },
 };
