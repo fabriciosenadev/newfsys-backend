@@ -78,19 +78,5 @@ routes.delete(
     LaunchController.destroy
     );
 
-// Rotas de fluxo de saída
-routes.post('/launch/out', (request, response) => {
-    response.send('API is working');
-});
-routes.get('/launch/out/:id', (request, response) => {
-    response.send('API is working');
-});
-routes.put('/launch/out/:id', (request, response) => {
-    response.send('API is working');
-});
-routes.delete('/launch/out/:id', (request, response) => {
-    response.send('API is working');
-});
-
 
 module.exports = routes;
