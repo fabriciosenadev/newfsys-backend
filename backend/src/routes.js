@@ -73,7 +73,6 @@ routes.post(
 routes.get(
     '/launch/:id', 
     SessionMiddleware.byPass,
-    // TODO: Adicionar validação dos campos a serem salvos
     LaunchController.show
     );
 routes.put(
