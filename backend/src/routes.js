@@ -42,7 +42,7 @@ routes.post('/user/info/', UserController.info);
 
 routes.post(
     '/user/login', 
-    // TODO: Adicionar validador de de dados enviados
+    SessionMiddleware.verifyCreate,
     SessionController.create
     );
 
