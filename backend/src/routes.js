@@ -15,6 +15,7 @@ const ProfileController = require('./controllers/ProfileController');
 const SessionMiddleware = require('./middlewares/SessionMiddleware');
 const UserMiddleware = require('./middlewares/UserMiddleware');
 const ProfileMiddleware = require('./middlewares/ProfileMiddleware');
+const LaunchMiddleware = require('./middlewares/LaunchMiddleware');
 
 const routes = express.Router();
 
@@ -65,9 +66,10 @@ routes.get(
 routes.post(
     '/launch', 
     SessionMiddleware.byPass, 
-    // TODO: Adicionar validação dos campos a serem salvos
+    LaunchMiddleware.validateStore,
     LaunchController.store
-    );
+);
+
 routes.get(
     '/launch/:id', 
     SessionMiddleware.byPass,
