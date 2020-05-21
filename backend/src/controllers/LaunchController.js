@@ -17,13 +17,6 @@ module.exports = {
                                         created_at: new Date().toISOString()
                                     });
 
-            if(!idHistoric)
-            {
-                return response.status(507).json({ 
-                    error: "An error ocurred when we tried to save data"
-                });
-            }
-
             if(idPayMethod)
             {
                 await connection('fsys_pay_method_historics')
@@ -60,8 +53,7 @@ module.exports = {
                                 .where('h.id','=',id, 'and', 'h.created_by', '=', userId)
                                 .whereNull('h.deleted_at')
                                 .first();
-            
-            console.log(launchData);
+
             return response.status(200).json({ launchData });
         }
         catch(error)
