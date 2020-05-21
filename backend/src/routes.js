@@ -50,13 +50,13 @@ routes.post(
 
 // Rotas de fluxo
 routes.get(
-        '/launching', 
+        '/profile', 
         SessionMiddleware.byPass,
         ProfileController.index
     );
 
 routes.get(
-    '/launch/search',
+    '/profile/search',
     SessionMiddleware.byPass,
     ProfileMiddleware.checkDate,
     ProfileController.showByDate
@@ -78,7 +78,7 @@ routes.get(
 routes.put(
     '/launch/:id', 
     SessionMiddleware.byPass,
-    // TODO: Adicionar validação dos campos a serem salvos
+    LaunchMiddleware.validateUpdate,
     LaunchController.update
     );
 routes.delete(
