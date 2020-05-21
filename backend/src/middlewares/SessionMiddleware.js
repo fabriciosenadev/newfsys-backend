@@ -39,4 +39,29 @@ module.exports = {
             return response.status(500).json(error);
         }
     },
+
+    async verifyCreate (request, response, next)
+    {
+        // validate if data was sent is real true
+        await check('email')
+                .exists()
+                .withMessage('email is required')
+                .isEmail()
+                .withMessage('email is not valid')
+                .run(request);
+
+        await check('password')
+                .exists()
+                .withMessage('password is required')
+                .isLength({ min: 8 })
+                .withMessage('min length is 8 characters')
+                .run(request);
+      
+        const result = validationResult(request);
+        if (!result.isEmpty()) {
+          return response.status(422).json({ errors: result.array() });
+        }
+
+        next();
+    },
 };
