@@ -53,6 +53,13 @@ routes.get(
         ProfileController.index
     );
 
+routes.get(
+    '/launch',
+    SessionMiddleware.byPass,
+    // TODO: Adicionar validação dos campos a serem recebibos
+    ProfileController.showByDate
+);
+
 // Rotas de lançamentos de entrada e saída
 routes.post(
     '/launch', 
