@@ -53,7 +53,7 @@ routes.get(
         ProfileController.index
     );
 
-// Rotas de fluxo de entrada
+// Rotas de lançamentos de entrada e saída
 routes.post(
     '/launch', 
     SessionMiddleware.byPass, 
@@ -66,9 +66,11 @@ routes.get(
     // TODO: Adicionar validação dos campos a serem salvos
     LaunchController.show
     );
-routes.put('/launch/in/:id', (request, response) => {
-    response.send('API is working');
-});
+routes.put(
+    '/launch/:id', 
+    // TODO: Adicionar validação dos campos a serem salvos
+    LaunchController.update
+    );
 routes.delete('/launch/in/:id', (request, response) => {
     response.send('API is working');
 });
