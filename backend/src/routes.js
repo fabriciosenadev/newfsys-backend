@@ -14,6 +14,7 @@ const ProfileController = require('./controllers/ProfileController');
 // Middlewares
 const SessionMiddleware = require('./middlewares/SessionMiddleware');
 const UserMiddleware = require('./middlewares/UserMiddleware');
+const ProfileMiddleware = require('./middlewares/ProfileMiddleware');
 
 const routes = express.Router();
 
@@ -54,9 +55,9 @@ routes.get(
     );
 
 routes.get(
-    '/launch',
+    '/launch/search',
     SessionMiddleware.byPass,
-    // TODO: Adicionar validação dos campos a serem recebibos
+    ProfileMiddleware.checkDate,
     ProfileController.showByDate
 );
 
