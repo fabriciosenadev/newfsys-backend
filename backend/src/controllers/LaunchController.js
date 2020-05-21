@@ -97,11 +97,43 @@ module.exports = {
                 });
             }
 
-            return response.status(200).json({ success: "method is working" });
+            return response.status(200).json({ success: "data was updated with successfully" });
         }
         catch (error)
         {
             return response.status(500).json({ error });
         }
     },
+
+    async destroy (request, response)
+    {
+        try
+        {
+            const { id } = request.params;
+
+            const payMethodHistorics = await connection('fsys_pay_method_historics')
+                .select('*').where({ id_historic: id }).first();
+            
+            await connection('fsys_historics')
+                .where({ id })
+                .update({
+                    deleted_at: new Date().toISOString()
+                });            
+
+            if(payMethodHistorics)
+            {
+                await connection('fsys_pay_method_historics')
+                    .where({ id_historic: id })
+                    .update({
+                        deleted_at: new Date().toISOString()
+                    });  
+            }
+
+            return response.status(200).json({ success: "data was removed with successfully" });
+        }
+        catch (error)
+        {
+            return response.status(500).json({ error });
+        }
+    }
 };
