@@ -1,3 +1,4 @@
+const { check, oneOf, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 require('dotenv-safe').config({
     allowEmptyValues: true,
