@@ -1,10 +1,9 @@
 import React from 'react';
+import Routes from './router';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Fsys</h1>
-    </div>
+    <Routes />
   );
 }
 
