@@ -1,10 +1,14 @@
 import React from 'react';
+import Navbar from '../template/Navbar';
 
 import './styles.css';
 
 export default function Home()
 {
     return(
-        <h1>Home - Fsys</h1>
+        <div>
+            <Navbar />
+            <h1>Home - fsys'</h1>
+        </div>
     );
 }
