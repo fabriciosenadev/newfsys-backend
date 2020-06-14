@@ -4,6 +4,7 @@ exports.up = function(knex) {
     table.increments();
     table.string('category').notNullable();
     table.enum('applicable',['in','out']).notNullable();
+    table.enum('is_custom',['no','yes']).notNullable();
     table.timestamps();
     table.timestamp('deleted_at');
   });
