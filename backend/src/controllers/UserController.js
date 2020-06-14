@@ -15,13 +15,29 @@ module.exports = {
         {
             const { full_name, email, password } = request.body;
                         
-            await connection('fsys_users')
+            const idUser = await connection('fsys_users')
                 .insert({
                     full_name,
                     email,
                     password,
                     created_at: new Date().toISOString()
                 });
+            
+            const defaultCategories = await connection('fsys_categories')
+                .select('id').where('is_custom','no');
+
+            for(i = 0; i < defaultCategories.length; i++)
+            {
+                let id_category = defaultCategories[i];
+                console.log(id_category.id, idUser);
+                await connection('fsys_category_users')
+                    .insert({
+                        id_user: idUser[0],
+                        id_category: defaultCategories[i].id,
+                        created_by: idUser[0],
+                        created_at: new Date().toISOString()
+                    });
+            }
             
             return response.status(200).json({ success:"data was saved with successfully" });
         }
