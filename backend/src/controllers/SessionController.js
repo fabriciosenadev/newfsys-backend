@@ -29,7 +29,6 @@ module.exports = {
                 .first();
 
             // verifica se o usuário foi encontrado
-            console.log(!userData);
             if  (!userData)
             {
                 // 507 to insuficient storage
