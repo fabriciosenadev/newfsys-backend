@@ -1,5 +1,5 @@
 // const express = require('express');
-const { check, oneOf, validationResult } = require('express-validator');
+const { check, oneOf, body, validationResult } = require('express-validator');
 const connection = require('../database/connection');
 
 module.exports = {
@@ -20,16 +20,24 @@ module.exports = {
                 .withMessage('email is not valid')
                 .run(request);
 
-        await check('password')
+        await check(['password','verifyPass'])
                 .exists()
                 .withMessage('password is required')
                 .isLength({ min: 8 })
                 .withMessage('min length is 8 characters')
                 .run(request);
+
+        await body('verifyPass').custom((value, { req }) => {
+                if (value !== req.body.password) {
+                  throw new Error('Password confirmation does not match password');
+                }           
+                // Indicates the success of this synchronous custom validator
+                return true;
+              }).run(request);
       
         const result = validationResult(request);
         if (!result.isEmpty()) {
-          return response.status(422).json({ errors: result.array() });
+          return response.status(422).json({ data: result.array() });
         }
       
         // validate if email exists
