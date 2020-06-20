@@ -34,7 +34,7 @@ module.exports = {
                 // 507 to insuficient storage
                 return response.status(401).json({ 
                     auth, 
-                    error: "user or password was not match"
+                    msg: "user or password was not match"
                 });
             } 
 
