@@ -68,6 +68,8 @@ module.exports = {
         
         if (!result.isEmpty()) {
           return response.status(422).json({ data: result.array() });
-        }        
+        }      
+        // user can be created now!
+        next();  
     }
 };
