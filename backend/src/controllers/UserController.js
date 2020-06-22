@@ -68,7 +68,7 @@ module.exports = {
                     msg: "user was not match" 
                 });
             
-            return response.status(200).json({ userId });
+            return response.status(200).json({ userId, success:"user was found, please proceed" });
         }
         catch (error)
         {
