@@ -53,5 +53,21 @@ module.exports = {
 
         // user can be created now!
         next();
+    },
+
+    async validateForgot (request, response, next)
+    {
+        await check('email')
+                .exists()
+                .withMessage('email is required')
+                .isEmail()
+                .withMessage('email is not valid')
+                .run(request);
+        
+        const result = validationResult(request);
+        
+        if (!result.isEmpty()) {
+          return response.status(422).json({ data: result.array() });
+        }        
     }
 };
