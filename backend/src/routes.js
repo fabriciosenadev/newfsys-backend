@@ -40,7 +40,12 @@ routes.post(
     UserMiddleware.validateForgot,
     UserController.forgot
 );
-routes.put('/user/reset_password', UserController.resetPassword);
+
+routes.put(
+    '/user/reset_password', 
+    UserMiddleware.validateReset,
+    UserController.resetPassword
+);
 
 routes.post('/user/info/', UserController.info);
 
