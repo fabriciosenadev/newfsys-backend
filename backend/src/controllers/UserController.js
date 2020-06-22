@@ -59,16 +59,16 @@ module.exports = {
             const { email } = request.body;
             
             const userId = await connection('fsys_users')
-                .where({ email }).select('id');
+                .where({ email }).select('id').first();
             
             // verifica se o usuário foi encontrado
-            if (userId.length < 1) 
+            if (userId === undefined) 
                 // 507 to insuficient storage
                 return response.status(507).json({ 
-                    error: "user was not match" 
+                    msg: "user was not match" 
                 });
             
-            return response.status(200).json(userId);
+            return response.status(200).json({ userId });
         }
         catch (error)
         {
