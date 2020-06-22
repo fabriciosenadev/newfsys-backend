@@ -71,5 +71,30 @@ module.exports = {
         }      
         // user can be created now!
         next();  
+    },
+
+    async validateReset (request, response, next)
+    {
+        await check(['password','verifyPass'])
+                .exists()
+                .withMessage('password is required')
+                .isLength({ min: 8 })
+                .withMessage('min length is 8 characters')
+                .run(request);
+
+        await body('verifyPass').custom((value, { req }) => {
+                if (value !== req.body.password) {
+                  throw new Error('Password confirmation does not match password');
+                }           
+                // Indicates the success of this synchronous custom validator
+                return true;
+              }).run(request);
+      
+        const result = validationResult(request);
+        if (!result.isEmpty()) {
+          return response.status(422).json({ data: result.array() });
+        } 
+        
+        next(); 
     }
 };
