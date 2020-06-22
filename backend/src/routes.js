@@ -35,7 +35,11 @@ routes
     );
 
 // controle de senha
-routes.post('/user/forgot', UserController.forgot);
+routes.post(
+    '/user/forgot', 
+    UserMiddleware.validateForgot,
+    UserController.forgot
+);
 routes.put('/user/reset_password', UserController.resetPassword);
 
 routes.post('/user/info/', UserController.info);
