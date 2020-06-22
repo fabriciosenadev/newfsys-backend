@@ -41,7 +41,7 @@ routes.post(
     UserController.forgot
 );
 
-routes.put(
+routes.post(
     '/user/reset_password', 
     UserMiddleware.validateReset,
     UserController.resetPassword
