@@ -27,46 +27,45 @@ routes.get('/api', (request, response) => {
 //#region user's routes
 
 // Rotas do usuário
-routes
-    .post(
-        '/user/register', 
-        UserMiddleware.validateToStore,
-        UserController.store,
-    );
+routes.post(
+    '/user/register',
+    UserMiddleware.validateToStore,
+    UserController.store,
+);
 
 // controle de senha
 routes.post(
-    '/user/forgot', 
+    '/user/forgot',
     UserMiddleware.validateForgot,
     UserController.forgot
 );
 
 routes.post(
-    '/user/reset_password', 
+    '/user/reset_password',
     UserMiddleware.validateReset,
     UserController.resetPassword
 );
 
 routes.get(
-    '/user/info', 
+    '/user/info',
     SessionMiddleware.byPass,
     UserController.info
 );
 
 routes.post(
-    '/user/login', 
+    '/user/login',
     SessionMiddleware.verifyCreate,
     SessionController.create
-    );
+);
 
 //#endregion
 
 // Rotas de fluxo
 routes.get(
-        '/profile', 
-        SessionMiddleware.byPass,
-        ProfileController.index
-    );
+    '/profile',
+    SessionMiddleware.byPass,
+    ProfileController.index
+);
 
 routes.get(
     '/profile/search',
@@ -77,28 +76,28 @@ routes.get(
 
 // Rotas de lançamentos de entrada e saída
 routes.post(
-    '/launch', 
-    SessionMiddleware.byPass, 
+    '/launch',
+    SessionMiddleware.byPass,
     LaunchMiddleware.validateStore,
     LaunchController.store
 );
 
 routes.get(
-    '/launch/:id', 
+    '/launch/:id',
     SessionMiddleware.byPass,
     LaunchController.show
-    );
+);
 routes.put(
-    '/launch/:id', 
+    '/launch/:id',
     SessionMiddleware.byPass,
     LaunchMiddleware.validateUpdate,
     LaunchController.update
-    );
+);
 routes.delete(
-    '/launch/:id', 
+    '/launch/:id',
     SessionMiddleware.byPass,
     LaunchController.destroy
-    );
+);
 
 
 module.exports = routes;
