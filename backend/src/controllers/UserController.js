@@ -111,9 +111,11 @@ module.exports = {
     {
         try
         {
-            const { id } = request.body;
+            const { userId } = request.body;
             const info = await connection('fsys_users')
-            .where({ id }).select('*');
+                .select('full_name', 'email')
+                .where({ id:userId })
+                .first();
             
             return response.status(200).json(info);
         }
