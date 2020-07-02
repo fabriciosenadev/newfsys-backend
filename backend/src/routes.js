@@ -114,6 +114,11 @@ routes.get(
     SessionMiddleware.byPass,
     SystemController.categories
 );
+routes.get(
+    '/system/pay_methods',
+    SessionMiddleware.byPass,
+    SystemController.payMethods
+);
 
 //#endregion
 module.exports = routes;
