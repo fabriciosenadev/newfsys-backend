@@ -5,7 +5,7 @@ module.exports = {
         try {
             const { userId } = request.body;
             const { applicable } = request.params;
-            
+
             const data = await connection('fsys_categories AS c')
                 .select('c.id', 'c.category')
                 .innerJoin('fsys_category_users AS cu', 'c.id', 'cu.id_category')
@@ -22,10 +22,22 @@ module.exports = {
     async userInfo(request, response) {
         try {
             const { userId } = request.body;
-                        
+
             const data = await connection('fsys_users')
-                .select('full_name').where('id','=', userId).first();
-            
+                .select('full_name').where('id', '=', userId).first();
+
+            return response.status(200).json({ data });
+        } catch (error) {
+            return response.status(500).json({ error });
+        }
+    },
+    async payMethods(request, response) {
+        try {
+            const { userId } = request.body;
+
+            const data = await connection('fsys_pay_methods')
+                .select('id', 'pay_method');
+
             return response.status(200).json({ data });
         } catch (error) {
             return response.status(500).json({ error });
