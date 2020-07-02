@@ -16,6 +16,7 @@ const SessionMiddleware = require('./middlewares/SessionMiddleware');
 const UserMiddleware = require('./middlewares/UserMiddleware');
 const ProfileMiddleware = require('./middlewares/ProfileMiddleware');
 const LaunchMiddleware = require('./middlewares/LaunchMiddleware');
+const SystemController = require('./controllers/SystemController');
 
 const routes = express.Router();
 
@@ -58,8 +59,6 @@ routes.post(
     SessionController.create
 );
 
-//#endregion
-
 // Rotas de fluxo
 routes.get(
     '/profile',
@@ -98,6 +97,23 @@ routes.delete(
     SessionMiddleware.byPass,
     LaunchController.destroy
 );
+//#endregion
 
+//#region System's routes
 
+// dados do usuário
+routes.get(
+    '/system/user/info',
+    SessionMiddleware.byPass,
+    SystemController.userInfo
+);
+
+// categories
+routes.get(
+    '/system/categories/:applicable',
+    SessionMiddleware.byPass,
+    SystemController.categories
+);
+
+//#endregion
 module.exports = routes;
