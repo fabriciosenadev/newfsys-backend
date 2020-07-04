@@ -66,8 +66,8 @@ routes.get(
     ProfileController.index
 );
 
-routes.get(
-    '/profile/search',
+routes.post(
+    '/launch/filter',
     SessionMiddleware.byPass,
     ProfileMiddleware.checkDate,
     ProfileController.showByDate
