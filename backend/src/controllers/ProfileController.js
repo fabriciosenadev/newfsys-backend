@@ -30,7 +30,7 @@ module.exports = {
         {   
             const { fromDate , toDate, userId } = request.body;
             const data = await connection('fsys_historics AS h')
-                            .select('h.id','h.date','h.description','h.value', 'c.category','pm.pay_method')
+                            .select('h.id','h.date','h.description','h.value', 'c.category', 'c.applicable','pm.pay_method')
                             .join('fsys_categories AS c','h.id_category','c.id')
                             .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
                             .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
