@@ -60,11 +60,11 @@ routes.post(
 );
 
 // Rotas de fluxo
-routes.get(
-    '/profile',
-    SessionMiddleware.byPass,
-    ProfileController.index
-);
+// routes.get(
+//     '/profile',
+//     SessionMiddleware.byPass,
+//     ProfileController.index
+// );
 
 routes.post(
     '/launch/filter',
@@ -120,5 +120,10 @@ routes.get(
     SystemController.payMethods
 );
 
+routes.get(
+    '/system/:month/:year',
+    SessionMiddleware.byPass,
+    SystemController.getMonth
+);
 //#endregion
 module.exports = routes;
