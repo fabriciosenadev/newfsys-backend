@@ -41,20 +41,20 @@ module.exports = {
     {
         try
         {
-
             const { id } = request.params;
             const { userId } = request.body;
 
-            const launchData = await connection('fsys_historics AS h')
-                                .select('h.id','h.date','h.description','h.value', 'c.category','pm.pay_method')
+            const data = await connection('fsys_historics AS h')
+                                .select('h.id','h.date','h.description','h.value', 'c.category','pm.pay_method','c.applicable')
                                 .join('fsys_categories AS c','h.id_category','c.id')
                                 .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
                                 .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
-                                .where('h.id','=',id, 'and', 'h.created_by', '=', userId)
+                                .where('h.id',id)
+                                .andWhere( 'h.created_by', userId)
                                 .whereNull('h.deleted_at')
                                 .first();
 
-            return response.status(200).json({ launchData });
+            return response.status(200).json({ data });
         }
         catch(error)
         {
