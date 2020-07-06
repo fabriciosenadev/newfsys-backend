@@ -6,43 +6,43 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('fsys_categories').insert([
         {
-          category: 'salary', 
+          category: 'Salário', 
           applicable: "in",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'food', 
+          category: 'Alimentação', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'beauty', 
+          category: 'Beleza', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'education', 
+          category: 'Educação', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'recreation', 
+          category: 'Lazer', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'health', 
+          category: 'Saúde', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()
         },                
         {
-          category: 'transport', 
+          category: 'Transporte', 
           applicable: "out",
           is_custom: 'no',
           created_at: knex.fn.now()

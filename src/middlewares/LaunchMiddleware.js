@@ -32,7 +32,7 @@ exports.validateStore = async (request, response, next) => {
 
     const result = validationResult(request);
     if (!result.isEmpty()) {
-        return response.status(422).json({ errors: result.array() });
+        return response.status(422).json({ data: result.array() });
     }
 
     next();
@@ -45,7 +45,7 @@ exports.validateUpdate = async (request, response, next) => {
 
     if(!isDate)
     {
-        return response.status(422).json({ error: "date is required, please verify if it's correctly" });
+        return response.status(422).json({ msg: "date is required, please verify if it's correctly" });
     }
 
     await check('value')
@@ -69,7 +69,7 @@ exports.validateUpdate = async (request, response, next) => {
 
     const result = validationResult(request);
     if (!result.isEmpty()) {
-        return response.status(422).json({ errors: result.array() });
+        return response.status(422).json({ data: result.array() });
     }
 
     next();

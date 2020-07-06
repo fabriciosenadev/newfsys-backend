@@ -6,15 +6,15 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('fsys_pay_methods').insert([
         {
-          pay_method: 'money',
+          pay_method: 'Dinheiro',
           applicable: 'wallet'
         },
         {
-          pay_method: 'debit',
+          pay_method: 'Débito',
           applicable: 'account'
         },
         {
-          pay_method: 'credit card',
+          pay_method: 'Cartão de crédito',
           applicable: 'credit'
         }
       ]);
