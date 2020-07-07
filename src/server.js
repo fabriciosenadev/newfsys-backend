@@ -16,7 +16,7 @@ const api = express();
 
 // access security
 api.use(cors({
-    origin: process.env.CLIENT_ADDRESS,
+    origin: 'https://fabriciosenadev.github.io',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
 
