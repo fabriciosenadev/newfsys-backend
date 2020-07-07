@@ -15,7 +15,10 @@ const routes = require('./routes');
 const api = express();
 
 // access security
-api.use(cors());
+api.use(cors({
+    origin: process.env.CLIENT_ADDRESS,
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}));
 
 // allow to use json format
 api.use(express.json());
