@@ -15,7 +15,9 @@ const routes = require('./routes');
 const api = express();
 
 // access security
-api.use(cors());
+api.use(cors({
+    origin: 'https://fabriciosenadev.github.io'
+}));
 
 // allow to use json format
 api.use(express.json());
