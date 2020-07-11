@@ -12,23 +12,23 @@ exports.validateStore = async (request, response, next) => {
 
     await check('value')
         .exists()
-        .withMessage('value is required')
+        .withMessage('Valor é obrigatório')
         .isFloat({ gt: 0.0 })
-        .withMessage('value is not valid')
+        .withMessage('Valor não é válido')
         .run(request);
 
     await check('id_category')
         .exists()
-        .withMessage("category id is required")
+        .withMessage("Categoria é obrigatória")
         .isInt({ gt: 0})
-        .withMessage('category id is not valid')
+        .withMessage('Categoria não é válida')
         .run(request);
 
     if(id_pay_method !== undefined)
     {
         await check('id_pay_method')
             .isInt({ gt: 0})
-            .withMessage('pay method id is not valid')
+            .withMessage('Metodo de pagamento não é valido')
             .run(request);
     }
 
@@ -46,26 +46,26 @@ exports.validateUpdate = async (request, response, next) => {
 
     if(!isDate)
     {
-        return response.status(422).json({ msg: "date is required, please verify if it's correctly" });
+        return response.status(422).json({ msg: "Data é obrigatória" });
     }
 
     await check('value')
         .exists()
-        .withMessage('value is required')
+        .withMessage('Valor é obrigatório')
         .isFloat()
-        .withMessage('value is not valid');
+        .withMessage('Valor não é válido');
 
     await check('idCategory')
         .exists()
-        .withMessage("category id is required")
+        .withMessage("Categoria é obrigatória")
         .isInt()
-        .withMessage('category id is not valid');
+        .withMessage('Categoria não é válida');
 
     if(idPayMethod)
     {
         await check('idPayMethod')
             .isInt()
-            .withMessage('pay method id is not valid');
+            .withMessage('Metodo de pagamento não é valido');
     }
 
     const result = validationResult(request);

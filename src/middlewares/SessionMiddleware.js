@@ -46,16 +46,16 @@ module.exports = {
         // validate if data was sent is real true
         await check('email')
                 .exists()
-                .withMessage('email is required')
+                .withMessage('E-mail é obrigatório')
                 .isEmail()
-                .withMessage('email is not valid')
+                .withMessage('E-mail inválido')
                 .run(request);
 
         await check('password')
                 .exists()
-                .withMessage('password is required')
+                .withMessage('Senha é obrigatória')
                 .isLength({ min: 8 })
-                .withMessage('min length is 8 characters')
+                .withMessage('A senha deve ter 8 caracteres ou mais')
                 .run(request);
       
         const result = validationResult(request);
