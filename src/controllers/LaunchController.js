@@ -28,7 +28,7 @@ module.exports = {
                     });
             }
             
-            return response.status(200).json({ success:"data was saved with successfully" });
+            return response.status(200).json({ success:"Dados salvos com sucesso" });
             
         }
         catch (error) 
@@ -89,7 +89,7 @@ module.exports = {
                 });
             }
 
-            return response.status(200).json({ success: "data was updated with successfully" });
+            return response.status(200).json({ success: "Dados salvos com sucesso" });
         }
         catch (error)
         {
@@ -121,7 +121,7 @@ module.exports = {
                     });  
             }
 
-            return response.status(200).json({ success: "data was removed with successfully" });
+            return response.status(200).json({ success: "Dados removidos com sucesso" });
         }
         catch (error)
         {

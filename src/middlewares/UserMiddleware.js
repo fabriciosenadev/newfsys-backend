@@ -8,28 +8,28 @@ module.exports = {
         // validate if data was sent is real true
         await check('full_name')
                 .exists()
-                .withMessage('full_name is required')
+                .withMessage('Nome completo é obrigatório')
                 .isLength({ min: 10 })
-                .withMessage('min length is 10 characters')
+                .withMessage('Nome muito curto, por favor informe nome completo')
                 .run(request);
         
         await check('email')
                 .exists()
-                .withMessage('email is required')
+                .withMessage('E-mail é obrigatório')
                 .isEmail()
-                .withMessage('email is not valid')
+                .withMessage('E-mail não é válido')
                 .run(request);
 
         await check(['password','verifyPass'])
                 .exists()
-                .withMessage('password is required')
+                .withMessage('Senha é obrigatório')
                 .isLength({ min: 8 })
-                .withMessage('min length is 8 characters')
+                .withMessage('Senha deve ter pelo meno 8 caracteres')
                 .run(request);
 
         await body('verifyPass').custom((value, { req }) => {
                 if (value !== req.body.password) {
-                  throw new Error('Password confirmation does not match password');
+                  throw new Error('Confirmação de senha é diferente da senha');
                 }           
                 // Indicates the success of this synchronous custom validator
                 return true;
@@ -48,7 +48,7 @@ module.exports = {
 
         if(dataExisting.length > 0)
         {
-          return response.status(507).json({ error: "email was used already" });
+          return response.status(507).json({ error: "E-mail já está em uso" });
         }      
 
         // user can be created now!
@@ -59,9 +59,9 @@ module.exports = {
     {
         await check('email')
                 .exists()
-                .withMessage('email is required')
+                .withMessage('E-mail é obrigatório')
                 .isEmail()
-                .withMessage('email is not valid')
+                .withMessage('E-mail não é válido')
                 .run(request);
         
         const result = validationResult(request);
@@ -77,14 +77,14 @@ module.exports = {
     {
         await check(['password','verifyPass'])
                 .exists()
-                .withMessage('password is required')
+                .withMessage('Senha é obrigatório')
                 .isLength({ min: 8 })
-                .withMessage('min length is 8 characters')
+                .withMessage('Senha deve ter pelo meno 8 caracteres')
                 .run(request);
 
         await body('verifyPass').custom((value, { req }) => {
                 if (value !== req.body.password) {
-                  throw new Error('Password confirmation does not match password');
+                  throw new Error('Confirmação de senha é diferente da senha');
                 }           
                 // Indicates the success of this synchronous custom validator
                 return true;

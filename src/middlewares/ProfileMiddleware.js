@@ -9,8 +9,7 @@ exports.checkDate = async (request, response, next) => {
 
     if (!FromDate || !ToDate) {
         return response.status(422).json({ 
-            msg: "some date is invalid please verify and try again",
-            datesValidation: { FromDate, ToDate }
+            msg: "Alguma data é inválida, por favor verifique e tente novamente"
         });
     }
 
@@ -18,7 +17,7 @@ exports.checkDate = async (request, response, next) => {
 
     if(diff)
     {
-        return response.status(422).json({ msg: "date from cannot be greater than date to" });
+        return response.status(422).json({ msg: "Data 'De' não pode ser maior que data 'Para'" });
     }
 
     next();

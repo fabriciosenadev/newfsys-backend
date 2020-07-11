@@ -39,7 +39,7 @@ module.exports = {
                     });
             }
             
-            return response.status(200).json({ success:"data was saved with successfully" });
+            return response.status(200).json({ success:"Dados salvos com sucesso" });
         }
         catch (error)
         {
@@ -68,7 +68,7 @@ module.exports = {
                     msg: "user was not match" 
                 });
             
-            return response.status(200).json({ userId, success:"user was found, please proceed" });
+            return response.status(200).json({ userId, success:"Dados corretos, por favor altere a senha" });
         }
         catch (error)
         {
@@ -94,7 +94,7 @@ module.exports = {
                 updated_at: new Date().toISOString()
             })
             
-            return response.status(200).json({ success:"data was saved with successfully" });
+            return response.status(200).json({ success:"Dados salvos com sucesso" });
         }
         catch (error)
         {
