@@ -10,6 +10,7 @@ const SessionController = require('./controllers/SessionController');
 const UserController = require('./controllers/UserController');
 const LaunchController = require('./controllers/LaunchController');
 const ProfileController = require('./controllers/ProfileController');
+const CategoryController = require('./controllers/CategoryController');
 
 // Middlewares
 const SessionMiddleware = require('./middlewares/SessionMiddleware');
@@ -17,6 +18,7 @@ const UserMiddleware = require('./middlewares/UserMiddleware');
 const ProfileMiddleware = require('./middlewares/ProfileMiddleware');
 const LaunchMiddleware = require('./middlewares/LaunchMiddleware');
 const SystemController = require('./controllers/SystemController');
+const CategoryMiddleware = require('./middlewares/CategoryMiddleware');
 
 const routes = express.Router();
 
@@ -59,12 +61,7 @@ routes.post(
     SessionController.create
 );
 
-// Rotas de fluxo
-// routes.get(
-//     '/profile',
-//     SessionMiddleware.byPass,
-//     ProfileController.index
-// );
+//#region Launch Routes
 
 routes.post(
     '/launch/filter',
@@ -98,6 +95,23 @@ routes.delete(
     LaunchController.destroy
 );
 //#endregion
+
+//#region categories
+routes.post(
+    '/category/new',
+    SessionMiddleware.byPass,
+    CategoryMiddleware.validateStore,
+    CategoryController.store
+);
+
+routes.delete(
+    '/category/:id',
+    SessionMiddleware.byPass,
+    CategoryController.destroy
+);
+//#endregion categories
+
+//#endregion user's routes
 
 //#region System's routes
 
