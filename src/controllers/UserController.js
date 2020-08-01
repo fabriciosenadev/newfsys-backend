@@ -29,7 +29,7 @@ module.exports = {
             for(i = 0; i < defaultCategories.length; i++)
             {
                 let id_category = defaultCategories[i];
-                console.log(id_category.id, idUser);
+                
                 await connection('fsys_category_users')
                     .insert({
                         id_user: idUser[0],
