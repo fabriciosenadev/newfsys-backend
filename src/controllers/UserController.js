@@ -29,7 +29,7 @@ module.exports = {
             for(i = 0; i < defaultCategories.length; i++)
             {
                 let id_category = defaultCategories[i];
-                console.log(id_category.id, idUser);
+                
                 await connection('fsys_category_users')
                     .insert({
                         id_user: idUser[0],
@@ -65,7 +65,7 @@ module.exports = {
             if (userId === undefined) 
                 // 507 to insuficient storage
                 return response.status(507).json({ 
-                    msg: "user was not match" 
+                    msg: "E-mail não encontrado" 
                 });
             
             return response.status(200).json({ userId, success:"Dados corretos, por favor altere a senha" });

@@ -7,7 +7,7 @@ exports.validateStore = async (request, response, next) => {
 
     if(!isDate)
     {
-        return response.status(422).json({ msg: "date is required, please verify if it's correctly" });
+        return response.status(422).json({ msg: "Data é obrigatória, por favor verifique se está preenchido" });
     }
 
     await check('value')
