@@ -4,13 +4,17 @@ module.exports = {
     async categories(request, response) {
         try {
             const { userId } = request.body;
-            const { applicable } = request.params;
+            const { applicable } = request.query;
 
             const data = await connection('fsys_categories AS c')
                 .select('c.id', 'c.category')
                 .innerJoin('fsys_category_users AS cu', 'c.id', 'cu.id_category')
                 .where('cu.id_user', '=', userId)
-                .andWhere('c.applicable', '=', applicable)
+                .andWhere((builder) => {
+                    if (applicable === 'in' || applicable === 'out') {
+                        builder.andWhere('c.applicable', applicable)
+                    }
+                })
                 .whereNull('cu.deleted_at');
 
             return response.status(200).json({ data });
