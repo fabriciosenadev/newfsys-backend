@@ -63,7 +63,7 @@ routes.post(
 
 //#region Launch Routes
 
-routes.post(
+routes.get(
     '/launch/filter',
     SessionMiddleware.byPass,
     ProfileMiddleware.checkDate,
