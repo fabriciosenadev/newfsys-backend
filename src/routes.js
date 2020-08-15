@@ -124,7 +124,7 @@ routes.get(
 
 // categories
 routes.get(
-    '/system/categories/:applicable',
+    '/system/categories',
     SessionMiddleware.byPass,
     SystemController.categories
 );
