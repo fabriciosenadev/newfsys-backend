@@ -4,7 +4,7 @@ exports.up = function(knex) {
         table.increments();
     
         table.date('date').notNullable();
-        table.string('description').notNullable();
+        table.string('description');
         table.decimal('value').notNullable();
 
         table.integer('id_category').notNullable();       
