@@ -26,4 +26,4 @@ api.use(express.json());
 api.use(routes);
 
 // use port parameter from .env file if has port
-api.listen(process.env.PORT || 3040);
+api.listen(process.env.PORT || 3040, () => console.log('running at 3040'));
