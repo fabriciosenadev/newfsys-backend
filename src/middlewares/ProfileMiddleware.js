@@ -2,7 +2,7 @@ const moment = require('moment');
 
 exports.checkDate = async (request, response, next) => {
 
-    const { fromDate, toDate } = request.body;
+    const { fromDate, toDate } = request.query;
     
     const FromDate = moment(fromDate, 'YYYY-MM-DD', true).isValid();
     const ToDate = moment(toDate, 'YYYY-MM-DD', true).isValid();
