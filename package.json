@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "nodemon src/server.js"
+    "test": "nodemon src/server.js",
+    "debug": "DEBUG=* nodemon src/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
