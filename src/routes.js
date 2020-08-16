@@ -63,7 +63,7 @@ routes.post(
 
 //#region Launch Routes
 
-routes.post(
+routes.get(
     '/launch/filter',
     SessionMiddleware.byPass,
     ProfileMiddleware.checkDate,
@@ -124,7 +124,7 @@ routes.get(
 
 // categories
 routes.get(
-    '/system/categories/:applicable',
+    '/system/categories',
     SessionMiddleware.byPass,
     SystemController.categories
 );
