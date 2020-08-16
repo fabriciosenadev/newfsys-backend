@@ -7,7 +7,7 @@ module.exports = {
             const { applicable } = request.query;
 
             const data = await connection('fsys_categories AS c')
-                .select('c.id', 'c.category')
+                .select('c.id', 'c.category', 'c.applicable')
                 .innerJoin('fsys_category_users AS cu', 'c.id', 'cu.id_category')
                 .where('cu.id_user', '=', userId)
                 .andWhere((builder) => {
