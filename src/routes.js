@@ -89,6 +89,13 @@ routes.put(
     LaunchMiddleware.validateUpdate,
     LaunchController.update
 );
+
+routes.put(
+    '/launch/update_status/:id',
+    SessionMiddleware.byPass,
+    LaunchController.updateStatus
+);
+
 routes.delete(
     '/launch/:id',
     SessionMiddleware.byPass,
