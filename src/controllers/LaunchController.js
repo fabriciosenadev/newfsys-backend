@@ -45,7 +45,10 @@ module.exports = {
             const { userId } = request.body;
 
             const data = await connection('fsys_historics AS h')
-                                .select('h.id','h.date','h.description','h.value', 'c.category','pm.pay_method','c.applicable')
+                                .select('h.id','h.date','h.description'
+                                    ,'h.value', 'c.category','pm.pay_method'
+                                    ,'c.applicable', 'h.status'
+                                )
                                 .join('fsys_categories AS c','h.id_category','c.id')
                                 .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
                                 .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
@@ -125,6 +128,28 @@ module.exports = {
         }
         catch (error)
         {
+            return response.status(500).json({ error });
+        }
+    },
+
+    async updateStatus(request, response) {        
+        try {
+            const { id } = request.params;
+            const { status, userId } = request.body;
+
+            await connection('fsys_historics')
+                .where({
+                    id, 
+                    created_by: userId
+                })
+                .update({
+                    status,
+                    updated_at: new Date().toISOString()
+                });
+
+                return response.status(200).json({ success: "Dados atualizados com sucesso" });
+            
+        } catch (error) {
             return response.status(500).json({ error });
         }
     }
