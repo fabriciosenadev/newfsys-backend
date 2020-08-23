@@ -51,7 +51,7 @@ module.exports = {
     async getMonth(request, response) {
         try {
             const { userId } = request.body;            
-            const { year, month } = request.params;
+            const { year, month } = request.query;
 
             let lastDay = '30';
             // janeiro, março, maio, julho, agosto, outubro, dezembro
@@ -80,6 +80,7 @@ module.exports = {
                 .join('fsys_categories AS c','h.id_category','c.id')
                 .where('h.created_by', userId)
                 .andWhere('c.applicable','in')
+                .andWhere('h.status', 'received')
                 .andWhereBetween('date',[fromDate, toDate])
                 .whereNull('h.deleted_at');
                 
@@ -89,6 +90,7 @@ module.exports = {
                 .join('fsys_categories AS c','h.id_category','c.id')
                 .where('h.created_by', userId)
                 .andWhere('c.applicable','out')
+                .andWhere('h.status', 'paid')
                 .andWhereBetween('date',[fromDate, toDate])
                 .whereNull('h.deleted_at');
 
