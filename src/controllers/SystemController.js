@@ -100,7 +100,6 @@ module.exports = {
     },
 
     async pieChart(request, response) {
-
         try {
             const { userId } = request.body;
             const { year, month } = request.query;
@@ -179,7 +178,6 @@ module.exports = {
         } catch (error) {
             return response.status(500).json({ error });
         }
-
     },
 
     async getDetailsByCategory(request, response) {
