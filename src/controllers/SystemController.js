@@ -50,13 +50,12 @@ module.exports = {
 
     async getMonth(request, response) {
         try {
-            const { userId } = request.body;            
+            const { userId } = request.body;
             const { year, month } = request.query;
 
             let lastDay = '30';
             // janeiro, março, maio, julho, agosto, outubro, dezembro
-            switch(month)
-            {
+            switch (month) {
                 case '01':
                 case '03':
                 case '05':
@@ -72,26 +71,26 @@ module.exports = {
             }
 
             let fromDate = `${year}-${month}-01`;
-            let toDate = `${year}-${month}-${lastDay}`;               
-            
+            let toDate = `${year}-${month}-${lastDay}`;
+
             const received = await connection('fsys_historics AS h')
                 .select('h.value')
                 .sum('h.value as value')
-                .join('fsys_categories AS c','h.id_category','c.id')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
                 .where('h.created_by', userId)
-                .andWhere('c.applicable','in')
+                .andWhere('c.applicable', 'in')
                 .andWhere('h.status', 'received')
-                .andWhereBetween('date',[fromDate, toDate])
+                .andWhereBetween('date', [fromDate, toDate])
                 .whereNull('h.deleted_at');
-                
+
             const paid = await connection('fsys_historics AS h')
                 .select('h.value')
                 .sum('h.value as value')
-                .join('fsys_categories AS c','h.id_category','c.id')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
                 .where('h.created_by', userId)
-                .andWhere('c.applicable','out')
+                .andWhere('c.applicable', 'out')
                 .andWhere('h.status', 'paid')
-                .andWhereBetween('date',[fromDate, toDate])
+                .andWhereBetween('date', [fromDate, toDate])
                 .whereNull('h.deleted_at');
 
             return response.status(200).json({ received, paid });
@@ -100,7 +99,7 @@ module.exports = {
         }
     },
 
-    async pieChart (request, response) {
+    async pieChart(request, response) {
 
         try {
             const { userId } = request.body;
@@ -108,8 +107,7 @@ module.exports = {
 
             let lastDay = '30';
             // janeiro, março, maio, julho, agosto, outubro, dezembro
-            switch(month)
-            {
+            switch (month) {
                 case '01':
                 case '03':
                 case '05':
@@ -131,39 +129,39 @@ module.exports = {
                 .select('c.id', 'c.category')
                 .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
                 .where('cu.id_user', userId)
-                .andWhere('c.applicable','in');
+                .andWhere('c.applicable', 'in');
 
             const categoriesOutData = await connection('fsys_category_users AS cu')
                 .select('c.id', 'c.category')
                 .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
                 .where('cu.id_user', userId)
-                .andWhere('c.applicable','out');
-            
+                .andWhere('c.applicable', 'out');
+
             let idsIn = categoriesInData.map(categoryData => categoryData.id);
             let idsOut = categoriesOutData.map(categoryData => categoryData.id);
 
             const historicsInData = await connection('fsys_historics AS h')
-                .select('h.*','c.category')
+                .select('h.*', 'c.category')
                 .sum('h.value AS value')
-                .join('fsys_categories AS c','h.id_category', 'c.id')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
                 .whereIn('h.id_category', idsIn)
                 .andWhere({
                     'h.status': 'received',
                     'h.created_by': userId
                 })
-                .andWhereBetween('h.date',[fromDate, toDate])
+                .andWhereBetween('h.date', [fromDate, toDate])
                 .groupBy('c.category');
 
             const historicsOutData = await connection('fsys_historics AS h')
-                .select('h.*','c.category')
+                .select('h.*', 'c.category')
                 .sum('h.value AS value')
-                .join('fsys_categories AS c','h.id_category', 'c.id')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
                 .whereIn('h.id_category', idsOut)
                 .andWhere({
                     'h.status': 'paid',
                     'h.created_by': userId
                 })
-                .andWhereBetween('h.date',[fromDate, toDate])
+                .andWhereBetween('h.date', [fromDate, toDate])
                 .groupBy('c.category');
 
             let categoriesIn = historicsInData.map(historicData => historicData.category);
@@ -171,7 +169,7 @@ module.exports = {
             let categoriesOut = historicsOutData.map(historicData => historicData.category);
             let valuesOut = historicsOutData.map((historicData) => historicData.value);
 
-            return response.status(200).json({ 
+            return response.status(200).json({
                 categoriesIn,
                 valuesIn,
                 categoriesOut,
@@ -182,5 +180,123 @@ module.exports = {
             return response.status(500).json({ error });
         }
 
+    },
+
+    async getDetailsByCategory(request, response) {
+        try {
+            console.log('cheguei aqui');
+            const { userId } = request.body;
+            const { year, month } = request.query;
+
+            let lastDay = '30';
+            // janeiro, março, maio, julho, agosto, outubro, dezembro
+            switch (month) {
+                case '01':
+                case '03':
+                case '05':
+                case '07':
+                case '08':
+                case '10':
+                case '12':
+                    lastDay = '31';
+                    break;
+                case '02':
+                    lastDay = '28';
+                    break;
+            }
+
+            let fromDate = `${year}-${month}-01`;
+            let toDate = `${year}-${month}-${lastDay}`;
+
+            const categoriesInData = await connection('fsys_category_users AS cu')
+                .select('c.id', 'c.category')
+                .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
+                .where('cu.id_user', userId)
+                .andWhere('c.applicable', 'in');
+
+            const categoriesOutData = await connection('fsys_category_users AS cu')
+                .select('c.id', 'c.category')
+                .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
+                .where('cu.id_user', userId)
+                .andWhere('c.applicable', 'out');
+
+            let idsIn = categoriesInData.map(categoryData => categoryData.id);
+            let idsOut = categoriesOutData.map(categoryData => categoryData.id);
+
+            const historicsInNonPendingData = await connection('fsys_historics AS h')
+                .select('h.id', 'h.date', 'c.category', 'h.value', 'h.status')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
+                .whereIn('h.id_category', idsIn)
+                .andWhere({
+                    'h.status': 'received',
+                    'h.created_by': userId
+                })
+                .andWhereBetween('h.date', [fromDate, toDate])
+                .orderBy([
+                    { column: 'c.applicable' },
+                    { column: 'c.id' },
+                    { column: 'h.status' },
+                    { column: 'h.date', order: 'desc' }
+                ]);
+
+            const historicsOutNonPendingData = await connection('fsys_historics AS h')
+                .select('h.id', 'h.date', 'c.category', 'h.value', 'h.status')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
+                .whereIn('h.id_category', idsOut)
+                .andWhere({
+                    'h.status': 'paid',
+                    'h.created_by': userId,
+                })
+                .andWhereBetween('h.date', [fromDate, toDate])
+                .orderBy([
+                    { column: 'c.applicable' },
+                    { column: 'c.id' },
+                    { column: 'h.status' },
+                    { column: 'h.date', order: 'desc' }
+                ]);
+
+            const historicsInPendingData = await connection('fsys_historics AS h')
+                .select('h.id', 'h.date', 'c.category', 'h.value', 'h.status')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
+                .whereIn('h.id_category', idsIn)
+                .andWhere({
+                    'h.status': 'pending',
+                    'h.created_by': userId,
+                    'c.applicable': 'in',
+                })
+                .andWhereBetween('h.date', [fromDate, toDate])
+                .orderBy([
+                    { column: 'c.applicable' },
+                    { column: 'c.id' },
+                    { column: 'h.status' },
+                    { column: 'h.date', order: 'desc' }
+                ]);
+            const historicsOutPendingData = await connection('fsys_historics AS h')
+                .select('h.id', 'h.date', 'c.category', 'h.value', 'h.status')
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
+                .whereIn('h.id_category', idsOut)
+                .andWhere({
+                    'h.status': 'pending',
+                    'h.created_by': userId,
+                    'c.applicable': 'out',
+                })
+                .andWhereBetween('h.date', [fromDate, toDate])
+                .orderBy([
+                    { column: 'c.applicable' },
+                    { column: 'c.id' },
+                    { column: 'h.status' },
+                    { column: 'h.date', order: 'desc' }
+                ]);
+
+            response.status(200).json({
+                historicsInNonPendingData,
+                historicsOutNonPendingData,
+                historicsInPendingData,
+                historicsOutPendingData
+            });
+
+        } catch (error) {
+            return response.status(500).json({ error });
+        }
     }
 };
