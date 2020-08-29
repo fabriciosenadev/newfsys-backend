@@ -5,7 +5,14 @@ module.exports = {
     {
         try
         {
-            const { date, description, value, id_category, userId, id_pay_method } = request.body;
+            const { 
+                date, 
+                description, 
+                value, 
+                id_category, 
+                userId, id_pay_method,
+                status
+            } = request.body;
             
             const idHistoric = await connection('fsys_historics')
                                     .insert({
@@ -14,7 +21,8 @@ module.exports = {
                                         value,
                                         id_category,
                                         created_by: userId,
-                                        created_at: new Date().toISOString()
+                                        created_at: new Date().toISOString(),
+                                        status
                                     });
 
             if(id_pay_method)
@@ -79,7 +87,8 @@ module.exports = {
                     description,
                     value,
                     id_category: idCategory,
-                    updated_at: new Date().toISOString()
+                    updated_at: new Date().toISOString(),
+                    status
                 });
 
             if (idPayMethod)

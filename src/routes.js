@@ -142,9 +142,16 @@ routes.get(
 );
 
 routes.get(
-    '/system/:month/:year',
+    '/system/user_profile',
     SessionMiddleware.byPass,
     SystemController.getMonth
 );
+
+routes.get(
+    '/system/pie_chart',
+    SessionMiddleware.byPass,
+    SystemController.pieChart
+);
+
 //#endregion
 module.exports = routes;

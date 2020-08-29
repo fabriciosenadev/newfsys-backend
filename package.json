@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "nodemon src/server.js",
-    "debug": "DEBUG=* nodemon src/server.js"
+    "debug": "DEBUG=* nodemon src/server.js",
+    "new-database": "npx knex migrate:latest && npx knex seed:run"
   },
   "dependencies": {
     "cors": "^2.8.5",

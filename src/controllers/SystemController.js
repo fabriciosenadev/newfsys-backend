@@ -51,7 +51,7 @@ module.exports = {
     async getMonth(request, response) {
         try {
             const { userId } = request.body;            
-            const { year, month } = request.params;
+            const { year, month } = request.query;
 
             let lastDay = '30';
             // janeiro, março, maio, julho, agosto, outubro, dezembro
@@ -80,6 +80,7 @@ module.exports = {
                 .join('fsys_categories AS c','h.id_category','c.id')
                 .where('h.created_by', userId)
                 .andWhere('c.applicable','in')
+                .andWhere('h.status', 'received')
                 .andWhereBetween('date',[fromDate, toDate])
                 .whereNull('h.deleted_at');
                 
@@ -89,6 +90,7 @@ module.exports = {
                 .join('fsys_categories AS c','h.id_category','c.id')
                 .where('h.created_by', userId)
                 .andWhere('c.applicable','out')
+                .andWhere('h.status', 'paid')
                 .andWhereBetween('date',[fromDate, toDate])
                 .whereNull('h.deleted_at');
 
@@ -96,5 +98,89 @@ module.exports = {
         } catch (error) {
             return response.status(500).json({ error });
         }
+    },
+
+    async pieChart (request, response) {
+
+        try {
+            const { userId } = request.body;
+            const { year, month } = request.query;
+
+            let lastDay = '30';
+            // janeiro, março, maio, julho, agosto, outubro, dezembro
+            switch(month)
+            {
+                case '01':
+                case '03':
+                case '05':
+                case '07':
+                case '08':
+                case '10':
+                case '12':
+                    lastDay = '31';
+                    break;
+                case '02':
+                    lastDay = '28';
+                    break;
+            }
+
+            let fromDate = `${year}-${month}-01`;
+            let toDate = `${year}-${month}-${lastDay}`;
+
+            const categoriesInData = await connection('fsys_category_users AS cu')
+                .select('c.id', 'c.category')
+                .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
+                .where('cu.id_user', userId)
+                .andWhere('c.applicable','in');
+
+            const categoriesOutData = await connection('fsys_category_users AS cu')
+                .select('c.id', 'c.category')
+                .innerJoin('fsys_categories AS c', 'cu.id_category', 'c.id')
+                .where('cu.id_user', userId)
+                .andWhere('c.applicable','out');
+            
+            let idsIn = categoriesInData.map(categoryData => categoryData.id);
+            let idsOut = categoriesOutData.map(categoryData => categoryData.id);
+
+            const historicsInData = await connection('fsys_historics AS h')
+                .select('h.*','c.category')
+                .sum('h.value AS value')
+                .join('fsys_categories AS c','h.id_category', 'c.id')
+                .whereIn('h.id_category', idsIn)
+                .andWhere({
+                    'h.status': 'received',
+                    'h.created_by': userId
+                })
+                .andWhereBetween('h.date',[fromDate, toDate])
+                .groupBy('c.category');
+
+            const historicsOutData = await connection('fsys_historics AS h')
+                .select('h.*','c.category')
+                .sum('h.value AS value')
+                .join('fsys_categories AS c','h.id_category', 'c.id')
+                .whereIn('h.id_category', idsOut)
+                .andWhere({
+                    'h.status': 'paid',
+                    'h.created_by': userId
+                })
+                .andWhereBetween('h.date',[fromDate, toDate])
+                .groupBy('c.category');
+
+            let categoriesIn = historicsInData.map(historicData => historicData.category);
+            let valuesIn = historicsInData.map(historicData => historicData.value);
+            let categoriesOut = historicsOutData.map(historicData => historicData.category);
+            let valuesOut = historicsOutData.map((historicData) => historicData.value);
+
+            return response.status(200).json({ 
+                categoriesIn,
+                valuesIn,
+                categoriesOut,
+                valuesOut,
+            });
+
+        } catch (error) {
+            return response.status(500).json({ error });
+        }
+
     }
 };
