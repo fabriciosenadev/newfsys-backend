@@ -153,5 +153,11 @@ routes.get(
     SystemController.pieChart
 );
 
+routes.get(
+    '/system/details_by_category',
+    SessionMiddleware.byPass,
+    SystemController.getDetailsByCategory
+)
+
 //#endregion
 module.exports = routes;
