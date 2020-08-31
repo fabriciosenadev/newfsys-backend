@@ -48,7 +48,11 @@ module.exports = {
 
         if(dataExisting.length > 0)
         {
-          return response.status(507).json({ error: "E-mail já está em uso" });
+          return response.status(507).json({ 
+            data: [
+              {msg: "E-mail já está em uso"} 
+            ]
+          });
         }      
 
         // user can be created now!
