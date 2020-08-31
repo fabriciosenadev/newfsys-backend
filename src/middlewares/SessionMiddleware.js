@@ -60,7 +60,7 @@ module.exports = {
       
         const result = validationResult(request);
         if (!result.isEmpty()) {
-          return response.status(422).json({ errors: result.array() });
+          return response.status(422).json({ data: result.array() });
         }
 
         next();
