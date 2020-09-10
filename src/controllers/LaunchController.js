@@ -78,25 +78,36 @@ module.exports = {
         try
         {
             const { id } = request.params;
-            const { date, description, value, idCategory, userId, idPayMethod } = request.body;
+            const { 
+                date, 
+                description, 
+                value, 
+                id_category, 
+                userId, 
+                id_pay_method,
+                status
+            } = request.body;
 
             await connection('fsys_historics')
-                .where({ id })
                 .update({ 
                     date,
                     description,
                     value,
-                    id_category: idCategory,
+                    id_category,
                     updated_at: new Date().toISOString(),
                     status
-                });
+                })
+                .where({ 
+                    id,
+                    created_by: userId
+                 });
 
-            if (idPayMethod)
+            if (id_pay_method)
             {
                 await connection('fsys_pay_method_historics')
                 .where({ id_historic: id })
                 .update({
-                    id_pay_method: idPayMethod,
+                    id_pay_method,
                     updated_at: new Date().toISOString()                     
                 });
             }
