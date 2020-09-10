@@ -159,5 +159,11 @@ routes.get(
     SystemController.getDetailsByCategory
 )
 
+routes.get(
+    '/system/launch/:id',
+    SessionMiddleware.byPass,
+    SystemController.getLaunchToUpdate
+);
+
 //#endregion
 module.exports = routes;
