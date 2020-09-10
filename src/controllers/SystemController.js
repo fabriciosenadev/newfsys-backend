@@ -163,16 +163,33 @@ module.exports = {
                 .andWhereBetween('h.date', [fromDate, toDate])
                 .groupBy('c.category');
 
+            const payMethodsData = await connection('fsys_historics AS h')
+                .select('h.*','pm.pay_method')
+                .sum('h.value AS value')
+                .innerJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
+                .join('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
+                .whereIn('h.id_category', idsOut)
+                .andWhere({
+                    'h.status': 'paid',
+                    'h.created_by': userId
+                })
+                .andWhereBetween('h.date', [fromDate, toDate])
+                .groupBy('pm.pay_method');
+
             let categoriesIn = historicsInData.map(historicData => historicData.category);
             let valuesIn = historicsInData.map(historicData => historicData.value);
             let categoriesOut = historicsOutData.map(historicData => historicData.category);
             let valuesOut = historicsOutData.map((historicData) => historicData.value);
+            let payMethods = payMethodsData.map(payMethodData => payMethodData.pay_method);
+            let totalsByPayMethod = payMethodsData.map(payMethodData => payMethodData.value);
 
             return response.status(200).json({
                 categoriesIn,
                 valuesIn,
                 categoriesOut,
                 valuesOut,
+                payMethods,
+                totalsByPayMethod,
             });
 
         } catch (error) {
@@ -293,6 +310,41 @@ module.exports = {
                 historicsOutPendingData
             });
 
+        } catch (error) {
+            return response.status(500).json({ error });
+        }
+    },
+
+    async getLaunchToUpdate(request, response){
+        try {
+            const { id } = request.params;
+            const { userId } = request.body;
+
+
+            const data = await connection('fsys_historics AS h')
+            .select(
+                'h.id',         
+                'h.id_category',
+                'h.date',       
+                'h.description',
+                'h.value',      
+                'h.status',
+                'c.applicable', 
+                'pm.pay_method',
+                'pmh.id_pay_method'
+            )
+            .join('fsys_categories AS c','h.id_category','c.id')
+            .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
+            .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
+            .where({
+                'h.id':id,
+                'h.created_by': userId
+            })
+            .whereNull('h.deleted_at')
+            .first();
+
+            return response.status(200).json({ data });
+            
         } catch (error) {
             return response.status(500).json({ error });
         }

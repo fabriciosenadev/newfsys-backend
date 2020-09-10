@@ -40,38 +40,39 @@ exports.validateStore = async (request, response, next) => {
 };
 
 exports.validateUpdate = async (request, response, next) => {
-    const { date, idPayMethod } = request.body;
-
+    const { date, id_pay_method } = request.body;
     const isDate = moment(date, 'YYYY-MM-DD', true).isValid();
 
     if(!isDate)
     {
-        return response.status(422).json({ msg: "Data é obrigatória" });
+        return response.status(422).json({ msg: "Data é obrigatória, por favor verifique se está preenchido" });
     }
 
     await check('value')
         .exists()
         .withMessage('Valor é obrigatório')
-        .isFloat()
-        .withMessage('Valor não é válido');
+        .isFloat({ gt: 0.0 })
+        .withMessage('Valor não é válido')
+        .run(request);
 
-    await check('idCategory')
+    await check('id_category')
         .exists()
         .withMessage("Categoria é obrigatória")
-        .isInt()
-        .withMessage('Categoria não é válida');
+        .isInt({ gt: 0})
+        .withMessage('Categoria não é válida')
+        .run(request);
 
-    if(idPayMethod)
+    if(id_pay_method !== undefined)
     {
-        await check('idPayMethod')
-            .isInt()
-            .withMessage('Metodo de pagamento não é valido');
+        await check('id_pay_method')
+            .isInt({ gt: 0})
+            .withMessage('Metodo de pagamento não é valido')
+            .run(request);
     }
 
     const result = validationResult(request);
     if (!result.isEmpty()) {
         return response.status(422).json({ data: result.array() });
     }
-
     next();
 };
