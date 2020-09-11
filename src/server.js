@@ -16,7 +16,7 @@ const api = express();
 
 // access security
 api.use(cors({
-    origin: 'https://fabriciosenadev.github.io'
+    origin: process.env.CLIENT_ADDRESS
 }));
 
 // allow to use json format
