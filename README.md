@@ -12,7 +12,7 @@ Este sistema tem por objetivo disseminar conhecimento sobre finanças pessoais e
 
 ## Frontend
 
-O frontend foi construído utilizando Angular (versão 9.1.1) e pode ser encontrado clicando [aqui](https://github.com/fabriciosenadev/newfsys-angular)
+O frontend foi construído utilizando Angular e pode ser encontrado clicando [aqui](https://github.com/fabriciosenadev/newfsys-angular)
 
 ## Como testar
 
