@@ -16,4 +16,4 @@ O frontend foi construído utilizando Angular (versão 9.1.1) e pode ser encontr
 
 ## Como testar
 
-Para testar online a partir do frontend clique [aqui](https://fabriciosenadev.github.io/newfsys-angular/)
+Para testar online a partir do frontend clique [aqui](https://newfsys.vercel.app/)
