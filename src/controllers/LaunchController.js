@@ -11,7 +11,8 @@ module.exports = {
                 value, 
                 id_category, 
                 userId, id_pay_method,
-                status
+                status,
+                next_month
             } = request.body;
             
             const idHistoric = await connection('fsys_historics')
@@ -33,6 +34,16 @@ module.exports = {
                         id_historic: idHistoric[0],
                         created_by: userId,
                         created_at: new Date().toISOString()                        
+                    });
+            }
+
+            if(next_month) {
+                await connection('fsys_scheduled_historics')
+                    .insert({
+                        id_historic: idHistoric[0],
+                        next_month,
+                        created_by: userId,
+                        created_at: new Date().toISOString()
                     });
             }
             
@@ -65,7 +76,16 @@ module.exports = {
                                 .whereNull('h.deleted_at')
                                 .first();
 
-            return response.status(200).json({ data });
+            let schedulingData = await connection('fsys_scheduled_historics')
+                .select('next_month')
+                .where({
+                    id_historic: id,
+                    created_by: userId,
+                    deleted_at: null
+                }).first();
+            if(schedulingData === undefined) schedulingData = { next_month:'' };
+
+            return response.status(200).json({ data, schedulingData: schedulingData });
         }
         catch(error)
         {
@@ -85,7 +105,8 @@ module.exports = {
                 id_category, 
                 userId, 
                 id_pay_method,
-                status
+                status,
+                next_month
             } = request.body;
 
             await connection('fsys_historics')
@@ -111,6 +132,49 @@ module.exports = {
                     updated_at: new Date().toISOString()                     
                 });
             }
+
+            if(next_month) {
+                // verify if exists scheduling
+                const idScheduled = await await connection('fsys_scheduled_historics')
+                    .select('id')
+                    .where({
+                      id_historic: id,
+                      created_by: userId  
+                    }).first();
+
+                if(!idScheduled) {
+                    await connection('fsys_scheduled_historics')
+                    .insert({
+                        id_historic: id,
+                        next_month,
+                        created_by: userId,
+                        created_at: new Date().toISOString()
+                    });
+                }
+                else {
+                    await connection('fsys_scheduled_historics')
+                    .where({
+                        id_historic: id,
+                        created_by: userId
+                    })
+                    .update({
+                        updated_at: new Date().toISOString(),
+                        deleted_at: null
+                    }); 
+                }
+            } 
+            else {
+                await connection('fsys_scheduled_historics')
+                .where({
+                    id_historic: id,
+                    created_by: userId
+                })
+                .update({
+                    updated_at: new Date().toISOString(),
+                    deleted_at: new Date().toISOString()
+                });
+            }
+            
 
             return response.status(200).json({ success: "Dados salvos com sucesso" });
         }
