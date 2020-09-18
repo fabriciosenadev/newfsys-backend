@@ -11,13 +11,14 @@ const UserController = require('./controllers/UserController');
 const LaunchController = require('./controllers/LaunchController');
 const ProfileController = require('./controllers/ProfileController');
 const CategoryController = require('./controllers/CategoryController');
+const SystemController = require('./controllers/SystemController');
+const PrepareSystemControler = require('./controllers/PreparerSystemController');
 
 // Middlewares
 const SessionMiddleware = require('./middlewares/SessionMiddleware');
 const UserMiddleware = require('./middlewares/UserMiddleware');
 const ProfileMiddleware = require('./middlewares/ProfileMiddleware');
 const LaunchMiddleware = require('./middlewares/LaunchMiddleware');
-const SystemController = require('./controllers/SystemController');
 const CategoryMiddleware = require('./middlewares/CategoryMiddleware');
 
 const routes = express.Router();
@@ -157,12 +158,24 @@ routes.get(
     '/system/details_by_category',
     SessionMiddleware.byPass,
     SystemController.getDetailsByCategory
-)
+);
 
 routes.get(
     '/system/launch/:id',
     SessionMiddleware.byPass,
     SystemController.getLaunchToUpdate
+);
+
+routes.get(
+    '/system/check_scheduling',
+    SessionMiddleware.byPass,
+    PrepareSystemControler.checkScheduling
+);
+
+routes.get(
+    '/system/create_launch_scheduled',
+    SessionMiddleware.byPass,
+    PrepareSystemControler.createLaunchingScheduled
 );
 
 //#endregion
