@@ -164,7 +164,7 @@ module.exports = {
                 .groupBy('c.category');
 
             const payMethodsData = await connection('fsys_historics AS h')
-                .select('h.*','pm.pay_method')
+                .select('h.*', 'pm.pay_method')
                 .sum('h.value AS value')
                 .innerJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
                 .join('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
@@ -350,9 +350,9 @@ module.exports = {
                     created_by: userId,
                     deleted_at: null
                 }).first();
-            if(schedulingData === undefined) schedulingData = { next_month:'' };
+            if (schedulingData === undefined) schedulingData = { next_month: '' };
 
-            return response.status(200).json({ data, schedulingData:schedulingData });
+            return response.status(200).json({ data, schedulingData: schedulingData });
 
         } catch (error) {
             return response.status(500).json({ error });
