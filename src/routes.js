@@ -12,6 +12,7 @@ const LaunchController = require('./controllers/LaunchController');
 const ProfileController = require('./controllers/ProfileController');
 const CategoryController = require('./controllers/CategoryController');
 const SystemController = require('./controllers/SystemController');
+const PrepareSystemControler = require('./controllers/PreparerSystemController');
 
 // Middlewares
 const SessionMiddleware = require('./middlewares/SessionMiddleware');
@@ -163,6 +164,18 @@ routes.get(
     '/system/launch/:id',
     SessionMiddleware.byPass,
     SystemController.getLaunchToUpdate
+);
+
+routes.get(
+    '/system/check_scheduling',
+    SessionMiddleware.byPass,
+    PrepareSystemControler.checkScheduling
+);
+
+routes.get(
+    '/system/create_launch_scheduled',
+    SessionMiddleware.byPass,
+    PrepareSystemControler.createLaunchingScheduled
 );
 
 //#endregion
