@@ -164,7 +164,7 @@ module.exports = {
                 .groupBy('c.category');
 
             const payMethodsData = await connection('fsys_historics AS h')
-                .select('h.*','pm.pay_method')
+                .select('h.*', 'pm.pay_method')
                 .sum('h.value AS value')
                 .innerJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
                 .join('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
@@ -315,36 +315,45 @@ module.exports = {
         }
     },
 
-    async getLaunchToUpdate(request, response){
+    async getLaunchToUpdate(request, response) {
         try {
             const { id } = request.params;
             const { userId } = request.body;
 
 
             const data = await connection('fsys_historics AS h')
-            .select(
-                'h.id',         
-                'h.id_category',
-                'h.date',       
-                'h.description',
-                'h.value',      
-                'h.status',
-                'c.applicable', 
-                'pm.pay_method',
-                'pmh.id_pay_method'
-            )
-            .join('fsys_categories AS c','h.id_category','c.id')
-            .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
-            .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
-            .where({
-                'h.id':id,
-                'h.created_by': userId
-            })
-            .whereNull('h.deleted_at')
-            .first();
+                .select(
+                    'h.id',
+                    'h.id_category',
+                    'h.date',
+                    'h.description',
+                    'h.value',
+                    'h.status',
+                    'c.applicable',
+                    'pm.pay_method',
+                    'pmh.id_pay_method'
+                )
+                .join('fsys_categories AS c', 'h.id_category', 'c.id')
+                .leftJoin('fsys_pay_method_historics AS pmh', 'h.id', 'pmh.id_historic')
+                .leftJoin('fsys_pay_methods AS pm', 'pmh.id_pay_method', 'pm.id')
+                .where({
+                    'h.id': id,
+                    'h.created_by': userId
+                })
+                .whereNull('h.deleted_at')
+                .first();
 
-            return response.status(200).json({ data });
-            
+            let schedulingData = await connection('fsys_scheduled_historics')
+                .select('next_month')
+                .where({
+                    id_historic: id,
+                    created_by: userId,
+                    deleted_at: null
+                }).first();
+            if (schedulingData === undefined) schedulingData = { next_month: '' };
+
+            return response.status(200).json({ data, schedulingData: schedulingData });
+
         } catch (error) {
             return response.status(500).json({ error });
         }
