@@ -46,6 +46,25 @@ module.exports = {
                         created_at: new Date().toISOString()
                     });
             }
+
+            let { amount_available } = await connection('fsys_user_amounts')
+                .select('amount_available')
+                .where({
+                    id_user: userId
+                }).first();
+
+            if(id_pay_method)
+                amount_available = amount_available - value;
+            else
+                amount_available = amount_available + value;
+
+            await connection('fsys_user_amounts')
+                .update({
+                    amount_available
+                })
+                .where({
+                    id_user: userId
+                });
             
             return response.status(200).json({ success:"Dados salvos com sucesso" });
             
@@ -101,7 +120,8 @@ module.exports = {
             const { 
                 date, 
                 description, 
-                value, 
+                value,
+                oldValue, 
                 id_category, 
                 userId, 
                 id_pay_method,
@@ -174,7 +194,27 @@ module.exports = {
                     deleted_at: new Date().toISOString()
                 });
             }
-            
+
+            let { amount_available } = await connection('fsys_user_amounts')
+            .select('amount_available')
+            .where({
+                id_user: userId
+            }).first();
+
+            amount_available = amount_available - oldValue;
+
+            if(id_pay_method)
+                amount_available = amount_available - value;
+            else
+                amount_available = amount_available + value;
+
+            await connection('fsys_user_amounts')
+                .update({
+                    amount_available
+                })
+                .where({
+                    id_user: userId
+                });
 
             return response.status(200).json({ success: "Dados salvos com sucesso" });
         }
