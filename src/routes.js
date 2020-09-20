@@ -178,5 +178,11 @@ routes.get(
     PrepareSystemControler.createLaunchingScheduled
 );
 
+routes.get(
+    '/system/amount_available',
+    SessionMiddleware.byPass,
+    SystemController.getUserAmount
+);
+
 //#endregion
 module.exports = routes;
