@@ -353,7 +353,6 @@ module.exports = {
             if (schedulingData === undefined) schedulingData = { next_month: '' };
 
             return response.status(200).json({ data, schedulingData: schedulingData });
-
         } catch (error) {
             return response.status(500).json({ error });
         }
