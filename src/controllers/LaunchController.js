@@ -201,12 +201,15 @@ module.exports = {
                 id_user: userId
             }).first();
 
-            amount_available = amount_available - oldValue;
-
-            if(id_pay_method)
+            
+            if(id_pay_method){
+                amount_available = amount_available + oldValue;
                 amount_available = amount_available - value;
-            else
+            }
+            else {
+                amount_available = amount_available - oldValue;
                 amount_available = amount_available + value;
+            }
 
             await connection('fsys_user_amounts')
                 .update({
