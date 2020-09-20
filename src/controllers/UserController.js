@@ -38,6 +38,13 @@ module.exports = {
                         created_at: new Date().toISOString()
                     });
             }
+
+            await connection('fsys_user_amounts')
+                .insert({
+                    id_user: idUser[0],
+                    amount_available: 0,
+                    created_at: new Date().toISOString()
+                });
             
             return response.status(200).json({ success:"Dados salvos com sucesso" });
         }

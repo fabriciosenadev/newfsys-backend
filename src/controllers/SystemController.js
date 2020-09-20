@@ -353,7 +353,22 @@ module.exports = {
             if (schedulingData === undefined) schedulingData = { next_month: '' };
 
             return response.status(200).json({ data, schedulingData: schedulingData });
+        } catch (error) {
+            return response.status(500).json({ error });
+        }
+    },
 
+    async getUserAmount(request, response) {
+        try {
+            const { userId } = request.body;
+
+            const data = await connection('fsys_user_amounts')
+                .select('amount_available')
+                .where({
+                    id_user: userId
+                }).first();
+
+            return response.status(200).json({ data });
         } catch (error) {
             return response.status(500).json({ error });
         }
