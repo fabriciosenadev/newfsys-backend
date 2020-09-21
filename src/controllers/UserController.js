@@ -1,4 +1,11 @@
 const connection = require('../database/connection');
+const cryptoJS = require('crypto-js');
+
+// obtain data from .env file
+require('dotenv-safe').config({
+    allowEmptyValues: true,
+    path: '.env'
+});
 
 module.exports = {
 
@@ -14,12 +21,17 @@ module.exports = {
         try
         {
             const { full_name, email, password } = request.body;
-                        
+
+            const passEcrypted = cryptoJS.AES.encrypt(
+                password.trim(), 
+                process.env.USER_SECRET
+                ).toString();
+
             const idUser = await connection('fsys_users')
                 .insert({
                     full_name,
                     email,
-                    password,
+                    password: passEcrypted,
                     created_at: new Date().toISOString()
                 });
             
