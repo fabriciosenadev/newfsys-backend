@@ -200,7 +200,7 @@ module.exports = {
             .where({
                 id_user: userId
             }).first();
-
+            
             if(id_pay_method){
                 amount_available = amount_available + oldValue;
                 amount_available = amount_available - value;
