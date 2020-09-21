@@ -1,5 +1,6 @@
 const connection = require('../database/connection');
 const jwt = require('jsonwebtoken');
+const cryptoJS = require('crypto-js');
 require('dotenv-safe').config({
     allowEmptyValues: true,
     path: '../.env'
@@ -22,10 +23,9 @@ module.exports = {
             let auth = false;
             const userData = await connection('fsys_users')
                 .where({
-                    email,
-                    password
+                    email
                 })
-                .select('id')
+                .select('id','password AS passEncrypted')
                 .first();
 
             // verifica se o usuário foi encontrado
@@ -34,9 +34,22 @@ module.exports = {
                 // 507 to insuficient storage
                 return response.status(401).json({ 
                     auth, 
-                    msg: "usuário ou senha está/estão incorreto(s)"
+                    msg: "usuário não localizado, por favor faça seu cadastro"
                 });
             } 
+            else {
+                const passDecrypted = cryptoJS.AES.decrypt(
+                    userData.passEncrypted, 
+                    process.env.USER_SECRET
+                    ).toString(cryptoJS.enc.Utf8);
+
+                    if (passDecrypted !== password) {
+                        return response.status(401).json({ 
+                            auth, 
+                            msg: "usuário ou senha está/estão incorreto(s)"
+                        });
+                    }
+            }
 
             auth = true;
             const { id } = userData;
@@ -48,6 +61,7 @@ module.exports = {
         }
         catch (error)
         {
+            console.log(error);
             return response.status(500).json(error);
         }
     },
