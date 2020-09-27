@@ -94,7 +94,7 @@ module.exports = {
             isEnableReset = true;
             const id = userData.id;
             const token = jwt.sign({ id }, process.env.SECRET, {
-                expiresIn: 10 // expires in 10 seconds
+                expiresIn: 60 * 10 // expires in 10 minutes
             });
             
             return response.status(200).json({ 
