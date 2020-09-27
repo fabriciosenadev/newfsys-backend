@@ -1,6 +1,13 @@
 // const express = require('express');
 const { check, oneOf, body, validationResult } = require('express-validator');
 const connection = require('../database/connection');
+const jwt = require('jsonwebtoken');
+
+// obtain data from .env file
+require('dotenv-safe').config({
+    allowEmptyValues: true,
+    path: '.env'
+});
 
 module.exports = {
     async validateToStore (request, response, next)
@@ -100,5 +107,37 @@ module.exports = {
         } 
         
         next(); 
+    },
+
+    validateToken(request, response, next) {
+      try {
+          let isEnableReset = false;
+          const { reset_token } = request.headers;
+          
+          if(!reset_token)
+          {
+              return response.status(401).json({ 
+                  isEnableReset, 
+                  error: "No token provided"
+              });
+          }
+          jwt.verify(reset_token, process.env.SECRET, function(error, decoded){
+              if(error) {
+                return response.status(507)
+                  .json({ 
+                    isEnableReset, 
+                    error ,
+                    msg: "Tempo de espera excedido, tente novamente"
+                  });
+              }
+                             
+              request.body.userId = decoded.id;
+              
+              next();
+          });
+      } catch (error) {
+          console.log(error);
+          return response.status(500).json(error);
+      }
     }
 };

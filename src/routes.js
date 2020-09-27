@@ -46,6 +46,7 @@ routes.post(
 
 routes.post(
     '/user/reset_password',
+    UserMiddleware.validateToken,
     UserMiddleware.validateReset,
     UserController.resetPassword
 );

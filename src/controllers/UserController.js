@@ -1,5 +1,6 @@
 const connection = require('../database/connection');
 const cryptoJS = require('crypto-js');
+const jwt = require('jsonwebtoken');
 
 // obtain data from .env file
 require('dotenv-safe').config({
@@ -76,18 +77,31 @@ module.exports = {
         try
         {
             const { email } = request.body;
+            let isEnableReset = false;
             
-            const userId = await connection('fsys_users')
+            const userData = await connection('fsys_users')
                 .where({ email }).select('id').first();
             
             // verifica se o usuário foi encontrado
-            if (userId === undefined) 
+            if (userData === undefined) {
                 // 507 to insuficient storage
-                return response.status(507).json({ 
+                return response.status(507).json({
+                    isEnableReset,
                     msg: "E-mail não encontrado" 
                 });
+            } 
+
+            isEnableReset = true;
+            const id = userData.id;
+            const token = jwt.sign({ id }, process.env.SECRET, {
+                expiresIn: 60 * 10 // expires in 10 minutes
+            });
             
-            return response.status(200).json({ userId, success:"Dados corretos, por favor altere a senha" });
+            return response.status(200).json({ 
+                token, 
+                isEnableReset,
+                success:"Dados corretos, por favor altere a senha" 
+            });
         }
         catch (error)
         {
@@ -105,11 +119,17 @@ module.exports = {
     {
         try
         {
-            const { id, password } = request.body;
+            const { userId, password } = request.body;
+
+            const passEcrypted = cryptoJS.AES.encrypt(
+                password.trim(), 
+                process.env.USER_SECRET
+                ).toString();
+
             await connection('fsys_users')
-            .where({ id })
+            .where({ id: userId })
             .update({ 
-                password,
+                password: passEcrypted,
                 updated_at: new Date().toISOString()
             })
             
@@ -117,6 +137,7 @@ module.exports = {
         }
         catch (error)
         {
+            console.log(error);
             return response.status(500).json(error);
         }
     },
