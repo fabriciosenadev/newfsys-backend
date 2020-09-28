@@ -17,16 +17,14 @@ module.exports = {
      * @param { password: string } request.body 
      * @param {*} response.json
      */
-    async store (request, response) 
-    {
-        try
-        {
+    async store(request, response) {
+        try {
             const { full_name, email, password } = request.body;
 
             const passEcrypted = cryptoJS.AES.encrypt(
-                password.trim(), 
+                password.trim(),
                 process.env.USER_SECRET
-                ).toString();
+            ).toString();
 
             const idUser = await connection('fsys_users')
                 .insert({
@@ -35,14 +33,13 @@ module.exports = {
                     password: passEcrypted,
                     created_at: new Date().toISOString()
                 });
-            
-            const defaultCategories = await connection('fsys_categories')
-                .select('id').where('is_custom','no');
 
-            for(i = 0; i < defaultCategories.length; i++)
-            {
+            const defaultCategories = await connection('fsys_categories')
+                .select('id').where('is_custom', 'no');
+
+            for (i = 0; i < defaultCategories.length; i++) {
                 let id_category = defaultCategories[i];
-                
+
                 await connection('fsys_category_users')
                     .insert({
                         id_user: idUser[0],
@@ -58,11 +55,10 @@ module.exports = {
                     amount_available: 0,
                     created_at: new Date().toISOString()
                 });
-            
-            return response.status(200).json({ success:"Dados salvos com sucesso" });
+
+            return response.status(200).json({ success: "Dados salvos com sucesso" });
         }
-        catch (error)
-        {
+        catch (error) {
             return response.status(500).json(error);
         }
     },
@@ -72,39 +68,36 @@ module.exports = {
      * @param { email: string } request.body
      * @param {*} response.json
      */
-    async forgot (request, response)
-    {
-        try
-        {
+    async forgot(request, response) {
+        try {
             const { email } = request.body;
             let isEnableReset = false;
-            
+          
             const userData = await connection('fsys_users')
                 .where({ email }).select('id').first();
-            
+
             // verifica se o usuário foi encontrado
             if (userData === undefined) {
                 // 507 to insuficient storage
                 return response.status(507).json({
                     isEnableReset,
-                    msg: "E-mail não encontrado" 
+                    msg: "E-mail não encontrado"
                 });
-            } 
+            }
 
             isEnableReset = true;
             const id = userData.id;
-            const token = jwt.sign({ id }, process.env.SECRET, {
+            const token = jwt.sign({ id }, process.env.USER_SECRET, {
                 expiresIn: 60 * 10 // expires in 10 minutes
             });
-            
-            return response.status(200).json({ 
-                token, 
+
+            return response.status(200).json({
+                token,
                 isEnableReset,
-                success:"Dados corretos, por favor altere a senha" 
+                success: "Dados corretos, por favor altere a senha"
             });
         }
-        catch (error)
-        {
+        catch (error) {
             return response.status(500).json(error);
         }
     },
@@ -115,28 +108,73 @@ module.exports = {
      * @param { password: string } request 
      * @param {*} response 
      */
-    async resetPassword (request, response)
-    {
-        try
-        {
+    async resetPassword(request, response) {
+        try {
             const { userId, password } = request.body;
 
             const passEcrypted = cryptoJS.AES.encrypt(
-                password.trim(), 
+                password.trim(),
                 process.env.USER_SECRET
-                ).toString();
+            ).toString();
 
             await connection('fsys_users')
-            .where({ id: userId })
-            .update({ 
-                password: passEcrypted,
-                updated_at: new Date().toISOString()
-            })
-            
-            return response.status(200).json({ success:"Dados salvos com sucesso" });
+                .where({ id: userId })
+                .update({
+                    password: passEcrypted,
+                    updated_at: new Date().toISOString()
+                })
+
+            return response.status(200).json({ success: "Dados salvos com sucesso" });
         }
-        catch (error)
-        {
+        catch (error) {
+            console.log(error);
+            return response.status(500).json(error);
+        }
+    },
+
+    async changePassword(request, response) {
+        try {
+            const {
+                userId,
+                oldPass,
+                newPass
+            } = request.body;
+
+            // verify old password to allow change
+            const userData = await connection('fsys_users')
+                .where({
+                    id:userId
+                })
+                .select('password AS passEncrypted')
+                .first();
+
+            const passDecrypted = cryptoJS.AES.decrypt(
+                userData.passEncrypted,
+                process.env.SECRET
+            ).toString(cryptoJS.enc.Utf8);            
+
+            if (passDecrypted !== oldPass) {
+                return response.status(401).json({
+                    msg: "Senha atual está incorreta"
+                });
+            }
+
+            // prepare new password to be save 
+            const passEcrypted = cryptoJS.AES.encrypt(
+                newPass.trim(),
+                process.env.SECRET
+            ).toString();
+
+            await connection('fsys_users')
+                .where({ id: userId })
+                .update({
+                    password: passEcrypted,
+                    updated_at: new Date().toISOString()
+                })
+
+            return response.status(200).json({ success: "Dados salvos com sucesso" });
+        }
+        catch (error) {
             console.log(error);
             return response.status(500).json(error);
         }
@@ -147,20 +185,17 @@ module.exports = {
      * @param { id: int } request 
      * @param {*} response.json
      */
-    async info (request, response)
-    {
-        try
-        {
+    async info(request, response) {
+        try {
             const { userId } = request.body;
             const info = await connection('fsys_users')
                 .select('full_name', 'email')
-                .where({ id:userId })
+                .where({ id: userId })
                 .first();
-            
+
             return response.status(200).json(info);
         }
-        catch (error)
-        {
+        catch (error) {
             return response.status(500).json(error);
         }
     },

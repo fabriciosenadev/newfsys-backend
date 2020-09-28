@@ -121,7 +121,7 @@ module.exports = {
                   error: "No token provided"
               });
           }
-          jwt.verify(reset_token, process.env.SECRET, function(error, decoded){
+          jwt.verify(reset_token, process.env.USER_SECRET, function(error, decoded){
               if(error) {
                 return response.status(507)
                   .json({ 
