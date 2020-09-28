@@ -51,6 +51,12 @@ routes.post(
     UserController.resetPassword
 );
 
+routes.post(
+    '/user/change_password',
+    SessionMiddleware.byPass,
+    UserController.changePassword,
+);
+
 routes.get(
     '/user/info',
     SessionMiddleware.byPass,
