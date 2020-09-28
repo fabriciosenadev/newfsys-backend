@@ -72,7 +72,7 @@ module.exports = {
         try {
             const { email } = request.body;
             let isEnableReset = false;
-
+          
             const userData = await connection('fsys_users')
                 .where({ email }).select('id').first();
 
